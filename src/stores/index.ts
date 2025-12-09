@@ -8,3 +8,4 @@ export { useAuthStore } from './authStore';
 export { useAlertStore } from './alertStore';
 export { useOnboardingStore } from './onboardingStore';
 export { useUploadStore } from './uploadStore';
+export { useRegistroUsuarioStore } from './registroUsuarioStore';

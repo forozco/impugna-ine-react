@@ -103,6 +103,81 @@ $white: #FFFFFF;
     gap: 1.5rem;
   }
 
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    .theme-label {
+      color: white;
+      font-size: 0.85rem;
+      opacity: 0.7;
+      font-weight: 400;
+      transition: opacity 0.2s ease;
+
+      &.active {
+        opacity: 1;
+        font-weight: 700;
+      }
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 22px;
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 2px solid #FFFFFF;
+        outline-offset: 3px;
+        border-radius: 20px;
+      }
+
+      input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:checked + .slider {
+          background-color: rgba(255, 255, 255, 0.5);
+
+          &:before {
+            transform: translateX(24px);
+          }
+        }
+
+        &:not(:checked) + .slider {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.3);
+        transition: 0.3s;
+        border-radius: 20px;
+
+        &:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 3px;
+          bottom: 3px;
+          background-color: white;
+          transition: 0.3s;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
   @media (max-width: 768px) {
     display: none;
   }
@@ -179,6 +254,81 @@ $white: #FFFFFF;
       display: flex;
       align-items: center;
       gap: 1.5rem;
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+
+      .theme-label {
+        color: white;
+        font-size: 0.85rem;
+        opacity: 0.7;
+        font-weight: 400;
+        transition: opacity 0.2s ease;
+
+        &.active {
+          opacity: 1;
+          font-weight: 700;
+        }
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 22px;
+        cursor: pointer;
+
+        &:focus-visible {
+          outline: 2px solid #FFFFFF;
+          outline-offset: 3px;
+          border-radius: 20px;
+        }
+
+        input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+
+          &:checked + .slider {
+            background-color: rgba(255, 255, 255, 0.5);
+
+            &:before {
+              transform: translateX(24px);
+            }
+          }
+
+          &:not(:checked) + .slider {
+            background-color: rgba(255, 255, 255, 0.5);
+          }
+        }
+
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(255, 255, 255, 0.3);
+          transition: 0.3s;
+          border-radius: 20px;
+
+          &:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+          }
+        }
+      }
     }
   }
 
@@ -1096,6 +1246,27 @@ $white: #FFFFFF;
         border-color: #e8e6f0;
       }
     }
+
+    .theme-toggle {
+      .theme-label {
+        color: #e8e6f0 !important;
+      }
+
+      .switch {
+        &:focus-visible {
+          outline: 2px solid #9b7ec4 !important;
+        }
+
+        .slider {
+          background-color: rgba(155, 126, 196, 0.3) !important;
+          border: 1px solid rgba(155, 126, 196, 0.5) !important;
+
+          &:before {
+            background-color: #e8e6f0 !important;
+          }
+        }
+      }
+    }
   }
 
   .header {
@@ -1114,6 +1285,27 @@ $white: #FFFFFF;
 
         .icon {
           border-color: #e8e6f0;
+        }
+      }
+
+      .theme-toggle {
+        .theme-label {
+          color: #e8e6f0 !important;
+        }
+
+        .switch {
+          &:focus-visible {
+            outline: 2px solid #9b7ec4 !important;
+          }
+
+          .slider {
+            background-color: rgba(155, 126, 196, 0.3) !important;
+            border: 1px solid rgba(155, 126, 196, 0.5) !important;
+
+            &:before {
+              background-color: #e8e6f0 !important;
+            }
+          }
         }
       }
     }

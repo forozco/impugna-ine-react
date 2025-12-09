@@ -1,0 +1,224 @@
+/**
+ * Estilos para RegistroExitosoUsuarioPage
+ * Equivalente a: registro-exitoso-usuario.scss de Angular
+ */
+
+/* Contenedor principal */
+.registro-exitoso-container {
+  background-color: #F5F5F5;
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+}
+
+.registro-exitoso-content {
+  max-width: 1318px;
+  margin: 0 auto;
+  padding: 3rem 4rem;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Título principal */
+.main-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 2rem;
+}
+
+/* Icono de check verde */
+.success-icon {
+  margin: 2rem 0;
+
+  i {
+    font-size: 6rem;
+    color: #28A745;
+    font-weight: bold;
+  }
+}
+
+/* Caja de información */
+.info-box {
+  background-color: #EBEBEB;
+  padding: 2rem 3rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.info-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #5B2A73;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.info-text {
+  font-size: 1rem;
+  color: #000000;
+  margin: 0;
+  line-height: 1.6;
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+/* Instrucciones */
+.instructions {
+  font-size: 1rem;
+  color: #000000;
+  margin: 2rem 0;
+  line-height: 1.6;
+}
+
+/* Texto importante */
+.important-text {
+  font-size: 0.95rem;
+  color: #000000;
+  margin: 2rem 0;
+  line-height: 1.6;
+  text-align: center;
+
+  p {
+    margin: 0.5rem 0;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+/* Separador */
+.separator {
+  border: none;
+  border-top: 1px solid #E0E0E0;
+  margin: 2rem 0;
+}
+
+/* Botón */
+.action-button {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+
+  .btn-iniciar-sesion {
+    background-color: #C42C7A;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 4rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+
+    &:hover {
+      background-color: #A82465;
+      color: white;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .registro-exitoso-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .main-title {
+    font-size: 2rem;
+  }
+
+  .success-icon i {
+    font-size: 4rem;
+  }
+
+  .info-box {
+    padding: 1.5rem 2rem;
+  }
+
+  .info-title {
+    font-size: 1.1rem;
+  }
+
+  .action-button .btn-iniciar-sesion {
+    width: 100%;
+    padding: 0.75rem 2rem;
+  }
+}
+
+// Dark mode styles
+:root.dark-mode {
+  .registro-exitoso-container {
+    background-color: var(--dark-bg-primary) !important;
+  }
+
+  .registro-exitoso-content {
+    background: var(--dark-bg-secondary) !important;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(155, 126, 196, 0.2);
+  }
+
+  .main-title {
+    color: var(--dark-text-primary) !important;
+  }
+
+  .success-icon {
+    i {
+      color: #00c9a7 !important;
+    }
+  }
+
+  .info-box {
+    background-color: var(--dark-bg-tertiary) !important;
+    border: 1px solid rgba(155, 126, 196, 0.2);
+  }
+
+  .info-title {
+    color: var(--dark-accent) !important;
+  }
+
+  .info-text {
+    color: var(--dark-text-secondary) !important;
+
+    strong {
+      color: var(--dark-text-primary) !important;
+    }
+  }
+
+  .instructions {
+    color: var(--dark-text-secondary) !important;
+  }
+
+  .important-text {
+    color: var(--dark-text-secondary) !important;
+
+    p {
+      color: var(--dark-text-secondary) !important;
+    }
+
+    strong {
+      color: var(--dark-text-primary) !important;
+    }
+  }
+
+  .separator {
+    border-top-color: var(--dark-border) !important;
+  }
+
+  .action-button {
+    .btn-iniciar-sesion {
+      background-color: var(--dark-accent) !important;
+      color: #ffffff !important;
+
+      &:hover {
+        background-color: var(--dark-accent-hover) !important;
+      }
+    }
+  }
+}

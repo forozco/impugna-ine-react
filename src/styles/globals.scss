@@ -175,7 +175,7 @@ html.dark-mode,
 
   // Force dark background on all main containers
   * {
-    &:not(.btn-primary):not(.btn-danger):not(.btn-success):not(.btn-warning):not(.btn-info):not([class*="bg-"]) {
+    &:not(.btn-primary):not(.btn-danger):not(.btn-success):not(.btn-warning):not(.btn-info):not([class*="bg-"]):not(.slider):not(.toggle-slider) {
       border-color: var(--dark-border);
     }
   }
@@ -326,7 +326,7 @@ html.dark-mode,
   // Header main bar
   .header {
     .top-bar {
-      background-color: #3d2957 !important;
+      background: #1a1625 !important;
       border-bottom: 1px solid var(--dark-border);
 
       .top-link {

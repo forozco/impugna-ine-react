@@ -5,7 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:local": "VITE_API_ENV=local vite",
+    "dev:dev": "VITE_API_ENV=dev vite",
+    "dev:prod": "VITE_API_ENV=prod vite",
     "build": "tsc -b && vite build",
+    "build:dev": "VITE_API_ENV=dev tsc -b && vite build",
+    "build:prod": "VITE_API_ENV=prod tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
