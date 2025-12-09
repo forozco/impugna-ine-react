@@ -1,17 +1,18 @@
 /**
  * Estilos de RegistroImpugnacionPage (Wizard)
- * Migrado de Angular: impugnacion-wizard.component.scss
+ * Migrado de Angular: impugnacion-wizard.component.scss + step0.component.scss
  */
 
 $purple-primary: #582E73;
 $magenta-primary: #C42C7A;
 
+/* Contenedor principal con fondo gris */
 .wizard-container {
   min-height: calc(100vh - 200px);
   padding: 2rem 0;
-  background-color: #f5f5f5;
 }
 
+/* Contenedor interno con caja blanca */
 .wizard-content {
   max-width: 1318px;
   margin: 0 auto;
@@ -22,26 +23,34 @@ $magenta-primary: #C42C7A;
   border-radius: 8px;
 
   h4 {
-    font: normal normal bold 38px/44px Roboto;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 38px;
+    line-height: 44px;
     letter-spacing: 0px;
     color: #000000;
     text-align: left;
-    margin-bottom: 1.5rem;
+    opacity: 1;
+    margin-bottom: 0;
   }
 
   h6 {
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 1rem;
   }
 }
 
 .space-my-0500 {
-  margin: 1.25rem 0;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .space-my-0400 {
-  margin: 1rem 0;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
 }
 
 .expediente-info {
@@ -62,241 +71,367 @@ $magenta-primary: #C42C7A;
   min-height: 400px;
 }
 
-.step-content {
-  h5 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #000000;
-    margin-bottom: 1rem;
-  }
-
-  .step-description {
-    font-size: 0.95rem;
-    color: #666666;
-    margin-bottom: 1.5rem;
-  }
+.step-actions {
+  margin-bottom: 3rem;
 }
 
-// Step Card (igual que Angular)
-.step-card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 1.5rem 0;
+/* Textos de encabezado del step */
+.dato-obligatorio-text {
+  font-size: 1.15rem;
+  font-weight: normal;
+  margin-bottom: 0.5rem;
 }
 
 .step-main-label {
-  font-size: 1.1rem;
-  color: #000;
-  margin-bottom: 1rem;
-  display: block;
+  font-size: 1.15rem;
+  font-weight: bold;
+
+  .text-danger {
+    color: #D5007F !important;
+    font-weight: 500;
+  }
 }
 
-// Radio Group (igual que Angular)
+/* Grupo de opciones radio */
 .radio-group {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+  margin: 2rem auto 0 auto;
 }
 
 .radio-card {
+  transition: box-shadow 0.2s, background 0.3s, min-height 0.4s cubic-bezier(0.4,0,0.2,1);
+  background: #EBEBEB;
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  font-size: 1.08rem;
+  width: 100%;
+  min-height: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
   display: flex;
-  flex-direction: column;
-  padding: 1.25rem 1.5rem;
-  background: #EFEFEF;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  align-items: center;
+
+  &:focus-visible {
+    outline: 3px solid #C42C7A;
+    outline-offset: 2px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 0 0 4px rgba(196, 44, 122, 0.1);
+  }
 
   &:hover {
-    border-color: $magenta-primary;
-    box-shadow: 0 2px 8px rgba(196, 44, 122, 0.15);
-  }
-
-  &:focus {
-    outline: 3px solid $magenta-primary;
-    outline-offset: 2px;
-  }
-
-  &.selected {
-    border-color: $magenta-primary;
-    background: #FAE8F3;
-  }
-
-  label {
+    background: #E0E0E0;
     cursor: pointer;
-    margin: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .radio-label {
+    font-size: 1.08rem;
+    font-weight: 500;
+    color: #333;
   }
 }
 
 .radio-custom {
-  appearance: none;
+  accent-color: #c42c7a;
   width: 20px;
   height: 20px;
-  border: 2px solid $magenta-primary;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  flex-shrink: 0;
+  margin-right: 1rem;
+}
 
-  &:checked {
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px;
-      height: 10px;
-      background: $magenta-primary;
-      border-radius: 50%;
-    }
+.radio-spacer {
+  width: 20px;
+  height: 20px;
+  margin-right: 1rem;
+  display: inline-block;
+}
+
+.radio-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #F5F5F5;
+  pointer-events: none;
+
+  label {
+    cursor: not-allowed;
+  }
+
+  .radio-label {
+    color: #999;
   }
 }
 
-.radio-label {
-  font-size: 1rem;
-  color: #000;
-  font-weight: 500;
+.radio-card.selected {
+  min-height: 64px;
+  height: auto;
+  background: #EBEBEB;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 1.2rem 1rem;
+  transition: box-shadow 0.2s, background 0.3s, min-height 0.4s cubic-bezier(0.4,0,0.2,1);
+
+  .form-collapse {
+    opacity: 1;
+    max-height: none;
+    transition: opacity 0.3s;
+  }
 }
 
-// Form Collapse (igual que Angular step1)
 .form-collapse {
+  background: #EBEBEB;
+  border-radius: 12px;
+  padding: 1.2rem 1rem;
+  margin-top: 0.5rem;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-  padding: 0;
+  opacity: 0;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+  padding-left: 2.5rem;
 
   &.open {
-    max-height: 1000px;
-    padding-top: 1.5rem;
-    margin-top: 1rem;
-    border-top: 1px solid #ddd;
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+    transition: opacity 0.3s;
+  }
+
+  .mb-3 {
+    margin-bottom: 1.2rem !important;
+  }
+
+  input.form-control {
+    width: 100%;
+    max-width: none;
+  }
+
+  .row.g-3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .col-md-6 {
+    flex: 1 1 0;
+    min-width: 260px;
+  }
+
+  .col-lg-6 {
+    flex: 1 1 0;
+    min-width: 260px;
+  }
+
+  .col-auto {
+    display: flex;
+    align-items: flex-end;
+    margin-left: auto;
+  }
+
+  .form-label {
+    font-weight: 500;
   }
 }
 
-// Tooltip personalizado
+/* Botones cuadrados para + y - */
+.d-flex.gap-1 {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 0.25rem !important;
+
+  .form-control {
+    flex: 1 1 auto !important;
+  }
+}
+
+.square-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border: 1px solid #ccc;
+  background: white;
+  color: #333;
+  padding: 0;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #f8f9fa;
+    border-color: #999;
+    color: #333;
+    z-index: 2;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25);
+    z-index: 3;
+  }
+
+  &:active {
+    background: #e9ecef;
+  }
+}
+
+.square-btn-spacer {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+/* Tooltip personalizado */
 .tooltip-icon-custom {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  background: $purple-primary;
-  color: #fff;
+  width: 20px;
+  height: 20px;
+  background-color: #c42c7a;
+  color: white;
   border-radius: 50%;
   font-size: 12px;
   font-weight: bold;
   cursor: help;
-  position: relative;
+  margin-left: 8px;
+  vertical-align: middle;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+
+  .icon-text {
+    font-family: serif;
+    font-style: italic;
+  }
+
+  &:hover {
+    background-color: #a0235f;
+  }
+
+  &:focus {
+    outline: 2px solid #c42c7a;
+    outline-offset: 2px;
+  }
 
   .tooltip-text {
     visibility: hidden;
+    opacity: 0;
+    min-width: 280px;
+    background-color: #2D2D2D;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 12px 16px;
     position: absolute;
-    bottom: 125%;
+    z-index: 1000;
+    bottom: 140%;
     left: 50%;
     transform: translateX(-50%);
-    background: #333;
-    color: #fff;
-    padding: 0.5rem 0.75rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 14px;
     font-weight: normal;
-    white-space: nowrap;
-    z-index: 100;
-    opacity: 0;
-    transition: opacity 0.2s;
+    white-space: normal;
+    transition: opacity 0.2s, visibility 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 100%;
       left: 50%;
-      margin-left: -5px;
-      border-width: 5px;
+      margin-left: -6px;
+      border-width: 6px;
       border-style: solid;
-      border-color: #333 transparent transparent transparent;
+      border-color: #2D2D2D transparent transparent transparent;
     }
   }
 
-  &:hover .tooltip-text {
+  &:hover .tooltip-text,
+  &:focus .tooltip-text {
     visibility: visible;
     opacity: 1;
   }
 }
 
-// Square buttons para agregar/quitar representantes
-.square-btn {
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-.square-btn-spacer {
-  width: 38px;
-  flex-shrink: 0;
-}
-
-// Stepper separator
+/* Estilos de botones para coincidir con el stepper */
 .stepper-separator {
-  margin: 2rem 0 1.5rem;
-  border: 0;
-  border-top: 1px solid #DEE2E6;
+  margin-top: 4.5rem;
+  margin-bottom: 1.5rem;
+  border: none;
+  border-top: 1px solid #D0D0D0;
 }
 
-// Button retroceder
-.btn-retroceder {
-  background: transparent;
-  border: 2px solid $purple-primary;
-  color: $purple-primary;
-  padding: 0.75rem 2rem;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s;
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
 
-  &:hover {
-    background: $purple-primary;
-    color: #fff;
-  }
-}
-
-// Autoridades agregadas
-.autoridades-agregadas {
-  h6 {
+  .btn {
+    padding: 0.75rem 3rem;
     font-size: 1rem;
     font-weight: 600;
-    color: $purple-primary;
-    margin-bottom: 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 3px solid #C42C7A;
+      outline-offset: 3px;
+    }
   }
 
-  .autoridad-item {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
+  .btn-retroceder {
+    background-color: #FBE6F2;
+    color: #5B2A73;
 
-    strong {
-      color: $purple-primary;
+    &:hover:not(:disabled) {
+      background-color: #F5D4E8;
+    }
+
+    &:focus-visible {
+      outline: 3px solid #5B2A73;
+      outline-offset: 3px;
+      box-shadow: 0 0 0 6px rgba(91, 42, 115, 0.2);
+    }
+  }
+
+  .btn-continuar {
+    background-color: #C42C7A;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: #A82465;
+    }
+
+    &:focus-visible {
+      outline: 3px solid #5B2A73;
+      outline-offset: 3px;
+      box-shadow: 0 0 0 6px rgba(196, 44, 122, 0.3);
     }
   }
 }
 
 // Form styles
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
 .form-group {
   &.full-width {
-    grid-column: 1 / -1;
+    width: 100%;
   }
 
   label {
@@ -327,8 +462,15 @@ $magenta-primary: #C42C7A;
     }
   }
 
-  select.form-control {
+  select.form-control,
+  .form-select {
     cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    padding-right: 2.5rem;
   }
 
   textarea.form-control {
@@ -401,55 +543,272 @@ $magenta-primary: #C42C7A;
   }
 }
 
-// Action buttons
-.action-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid #DEE2E6;
+// Autoridades agregadas
+.autoridades-agregadas {
+  h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $purple-primary;
+    margin-bottom: 1rem;
+  }
+
+  .autoridad-item {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+
+    strong {
+      color: $purple-primary;
+    }
+  }
 }
 
-// Mobile styles
+// Step card
+.step-card {
+  h5 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 1rem;
+  }
+
+  .step-description {
+    font-size: 0.95rem;
+    color: #666666;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Invalid feedback
+.invalid-feedback {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+
+  &.d-block {
+    display: block;
+  }
+}
+
+/* Responsive Mobile */
 @media (max-width: 768px) {
   .wizard-container {
-    padding: 1rem 0;
+    padding: 1.5rem 0;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    min-height: calc(100vh - 180px);
   }
 
   .wizard-content {
-    padding: 1.5rem 1rem;
-    margin-bottom: 3rem;
+    padding: 2rem 1.25rem;
+    margin: 0 0.5rem 4rem;
+    width: calc(100% - 1rem);
+    max-width: calc(100vw - 1rem);
+    box-sizing: border-box;
+    overflow-x: hidden;
 
     h4 {
       font-size: 1.5rem;
       line-height: 1.2;
+      margin-bottom: 0.5rem;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      hyphens: none;
+    }
+
+    h6 {
+      font-size: 0.95rem;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+
+    .space-my-0500 {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .space-my-0400 {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .dato-obligatorio-text {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 0.625rem;
+  }
+
+  .step-main-label {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .step-card {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+    .mb-3 {
+      margin-bottom: 1.5rem !important;
+    }
+
+    .fw-normal {
+      font-size: 0.95rem !important;
+      line-height: 1.4;
+    }
+
+    .form-label {
+      font-size: 1rem !important;
+      line-height: 1.3;
       margin-bottom: 1rem;
+    }
+  }
+
+  .radio-group {
+    gap: 1rem;
+    margin: 1.5rem auto 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .radio-card {
+    padding: 0.875rem 1rem;
+    min-height: 56px;
+    height: auto;
+    margin-bottom: 0.875rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    label {
+      gap: 0.75rem;
+    }
+
+    .radio-label {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .radio-custom {
+      width: 18px;
+      height: 18px;
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .radio-spacer {
+      width: 18px;
+      height: 18px;
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+    }
+  }
+
+  .radio-card.selected {
+    min-height: 56px;
+    padding: 1rem 0.875rem;
+  }
+
+  .form-collapse {
+    padding: 1rem 0.875rem;
+    padding-left: 2rem;
+    margin-top: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    .mb-3 {
+      margin-bottom: 1rem !important;
+    }
+
+    .row.g-3 {
+      gap: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .col-md-6,
+    .col-lg-6 {
+      min-width: 100%;
+      flex: 1 1 100%;
+    }
+
+    .col-auto {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0.5rem;
+    }
+
+    .form-label {
+      font-size: 0.9rem !important;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+      font-size: 0.9rem;
+      padding: 0.625rem 0.75rem;
+      min-height: 44px;
+    }
+  }
+
+  .square-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+    border-radius: 6px !important;
+  }
+
+  .square-btn-spacer {
+    width: 44px;
+    height: 44px;
+  }
+
+  .tooltip-icon-custom {
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    margin-left: 4px;
+    margin-top: 1px;
+
+    .tooltip-text {
+      width: 280px;
+      margin-left: -140px;
+      font-size: 0.8rem;
+      padding: 0.625rem 0.875rem;
+      white-space: normal;
+      line-height: 1.4;
+    }
+  }
+
+  .stepper-separator {
+    margin-top: 3rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .action-buttons {
+    flex-direction: column-reverse;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+
+    .btn {
+      width: 100%;
+      padding: 0.75rem 2rem;
+      font-size: 0.95rem;
+      min-height: 44px;
     }
   }
 
   .step-container {
     min-height: auto;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .step-actores {
-    .radio-card {
-      padding: 1rem;
-    }
-
-    .radio-content {
-      h6 {
-        font-size: 1rem;
-      }
-
-      p {
-        font-size: 0.85rem;
-      }
-    }
   }
 
   .upload-box {
@@ -463,29 +822,168 @@ $magenta-primary: #C42C7A;
       font-size: 0.9rem;
     }
   }
+}
+
+// Responsive para pantallas muy pequeñas
+@media (max-width: 375px) {
+  .wizard-container {
+    padding: 1.25rem 0;
+  }
+
+  .wizard-content {
+    padding: 1.75rem 1rem;
+    margin: 0 0.375rem 3.5rem;
+    width: calc(100% - 0.75rem);
+    max-width: calc(100vw - 0.75rem);
+
+    h4 {
+      font-size: 1.5rem;
+      margin-bottom: 0.375rem;
+    }
+
+    h6 {
+      font-size: 0.95rem;
+      margin-bottom: 0.375rem;
+      margin-top: 0.375rem;
+    }
+
+    .space-my-0500 {
+      margin-top: 0.125rem;
+      margin-bottom: 0.125rem;
+    }
+
+    .space-my-0400 {
+      margin-top: 0.125rem;
+      margin-bottom: 0.125rem;
+    }
+  }
+
+  .dato-obligatorio-text {
+    font-size: 0.875rem;
+    line-height: 1.3;
+  }
+
+  .step-main-label {
+    font-size: 0.95rem;
+    line-height: 1.25;
+  }
+
+  .step-card {
+    padding: 0;
+
+    .fw-normal {
+      font-size: 0.875rem !important;
+    }
+
+    .form-label {
+      font-size: 0.95rem !important;
+    }
+  }
+
+  .radio-group {
+    gap: 0.875rem;
+    margin: 1.25rem auto 0;
+  }
+
+  .radio-card {
+    padding: 0.75rem 0.875rem;
+    min-height: 52px;
+    margin-bottom: 0.75rem;
+
+    label {
+      gap: 0.625rem;
+    }
+
+    .radio-label {
+      font-size: 0.875rem;
+    }
+
+    .radio-custom {
+      width: 16px;
+      height: 16px;
+      margin-right: 0.625rem;
+    }
+
+    .radio-spacer {
+      width: 16px;
+      height: 16px;
+      margin-right: 0.625rem;
+    }
+  }
+
+  .radio-card.selected {
+    min-height: 52px;
+    padding: 0.875rem 0.75rem;
+  }
+
+  .form-collapse {
+    padding: 0.875rem 0.75rem;
+    padding-left: 1.75rem;
+    margin-top: 0.625rem;
+
+    .form-label {
+      font-size: 0.85rem !important;
+    }
+
+    .form-control {
+      font-size: 0.85rem;
+      padding: 0.625rem 0.625rem;
+    }
+  }
+
+  .square-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .square-btn-spacer {
+    width: 40px;
+    height: 40px;
+  }
+
+  .tooltip-icon-custom {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+
+    .tooltip-text {
+      width: 240px;
+      margin-left: -120px;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.75rem;
+    }
+  }
+
+  .stepper-separator {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
 
   .action-buttons {
-    flex-direction: column;
-    gap: 1rem;
+    gap: 0.875rem;
 
-    button {
-      width: 100%;
+    .btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
     }
   }
 }
 
-// Dark mode
+// Dark mode styles
 .dark-mode {
   .wizard-container {
-    background-color: var(--dark-bg-primary) !important;
+    background: var(--dark-bg-primary) !important;
   }
 
   .wizard-content {
     background-color: var(--dark-bg-secondary) !important;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(155, 126, 196, 0.2);
 
     h4 {
       color: var(--dark-text-primary) !important;
+      text-shadow: 0 0 20px rgba(155, 126, 196, 0.15);
     }
 
     h5 {
@@ -493,7 +991,7 @@ $magenta-primary: #C42C7A;
     }
 
     h6 {
-      color: var(--dark-text-secondary) !important;
+      color: var(--dark-text-primary) !important;
     }
   }
 
@@ -506,7 +1004,11 @@ $magenta-primary: #C42C7A;
     }
   }
 
-  // Step card dark mode
+  .dato-obligatorio-text,
+  .step-main-label {
+    color: var(--dark-text-primary) !important;
+  }
+
   .step-card {
     background: transparent !important;
 
@@ -519,63 +1021,53 @@ $magenta-primary: #C42C7A;
     }
   }
 
-  // Labels y textos
-  .dato-obligatorio {
-    color: var(--dark-text-secondary) !important;
-  }
+  .radio-card {
+    background: var(--dark-bg-tertiary) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
-  .step-main-label {
-    color: var(--dark-text-primary) !important;
-  }
-
-  .form-label {
-    color: var(--dark-text-secondary) !important;
-  }
-
-  // Radio cards dark mode
-  .radio-group {
-    .radio-card {
-      background: var(--dark-bg-tertiary) !important;
-      border-color: var(--dark-border) !important;
-
-      &:hover {
-        border-color: var(--dark-accent) !important;
-        box-shadow: 0 4px 12px rgba(155, 126, 196, 0.25) !important;
-      }
-
-      &.selected {
-        border-color: var(--dark-accent) !important;
-        background: rgba(155, 126, 196, 0.15) !important;
-      }
+    &:hover {
+      background: rgba(155, 126, 196, 0.15) !important;
     }
+
+    &:focus-visible {
+      outline-color: var(--dark-accent) !important;
+      box-shadow: 0 4px 16px rgba(155, 126, 196, 0.2), 0 0 0 4px rgba(155, 126, 196, 0.2) !important;
+    }
+
+    .radio-label {
+      color: var(--dark-text-primary) !important;
+    }
+  }
+
+  .radio-card.disabled {
+    background: var(--dark-bg-quaternary) !important;
+    opacity: 0.5;
+
+    .radio-label {
+      color: var(--dark-text-muted) !important;
+    }
+  }
+
+  .radio-card.selected {
+    background: var(--dark-bg-tertiary) !important;
   }
 
   .radio-custom {
-    border-color: var(--dark-accent) !important;
+    accent-color: var(--dark-accent) !important;
+  }
+
+  .form-collapse {
     background: var(--dark-bg-tertiary) !important;
 
-    &:checked::after {
-      background: var(--dark-accent) !important;
+    .form-label {
+      color: var(--dark-text-primary) !important;
     }
-  }
 
-  .radio-label {
-    color: var(--dark-text-primary) !important;
-  }
-
-  // Tooltip dark mode
-  .tooltip-icon-custom {
-    background: var(--dark-accent) !important;
-  }
-
-  // Form collapse dark mode
-  .form-collapse {
     &.open {
       border-top-color: var(--dark-border) !important;
     }
   }
 
-  // Form controls dark mode
   .form-control {
     background-color: var(--dark-bg-tertiary) !important;
     border-color: var(--dark-border) !important;
@@ -602,41 +1094,88 @@ $magenta-primary: #C42C7A;
     }
   }
 
-  // Invalid feedback
-  .invalid-feedback {
-    color: #ff6b6b !important;
-  }
-
-  // Square buttons dark mode
   .square-btn {
     background: var(--dark-bg-tertiary) !important;
-    border-color: var(--dark-border) !important;
     color: var(--dark-text-primary) !important;
+    border-color: var(--dark-border) !important;
 
     &:hover {
-      background: var(--dark-accent) !important;
+      background: var(--dark-hover) !important;
       border-color: var(--dark-accent) !important;
-      color: #fff !important;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(155, 126, 196, 0.25) !important;
+    }
+
+    &:active {
+      background: rgba(155, 126, 196, 0.2) !important;
     }
   }
 
-  // Stepper separator dark mode
+  .tooltip-icon-custom {
+    background-color: var(--dark-accent) !important;
+
+    &:hover {
+      background-color: var(--dark-accent-hover) !important;
+    }
+
+    &:focus {
+      outline-color: var(--dark-accent) !important;
+    }
+
+    .tooltip-text {
+      background-color: rgba(80, 60, 100, 0.95) !important;
+      color: #ffffff !important;
+      border: 1px solid var(--dark-border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+      &::after {
+        border-color: rgba(80, 60, 100, 0.95) transparent transparent transparent !important;
+      }
+    }
+  }
+
   .stepper-separator {
     border-top-color: var(--dark-border) !important;
   }
 
-  // Button retroceder dark mode
-  .btn-retroceder {
-    border-color: var(--dark-accent) !important;
-    color: var(--dark-accent) !important;
+  .action-buttons {
+    border-top-color: var(--dark-border) !important;
 
-    &:hover {
-      background: var(--dark-accent) !important;
-      color: #fff !important;
+    .btn-retroceder {
+      background-color: var(--dark-bg-tertiary) !important;
+      color: var(--dark-text-primary) !important;
+
+      &:hover:not(:disabled) {
+        background-color: var(--dark-hover) !important;
+      }
+
+      &:focus-visible {
+        outline-color: var(--dark-accent) !important;
+        box-shadow: 0 0 0 6px rgba(155, 126, 196, 0.2) !important;
+      }
+    }
+
+    .btn-continuar {
+      background-color: var(--dark-accent) !important;
+      color: #ffffff !important;
+
+      &:hover:not(:disabled) {
+        background-color: var(--dark-accent-hover) !important;
+      }
+
+      &:focus-visible {
+        outline-color: #ffffff !important;
+        box-shadow: 0 0 0 6px rgba(155, 126, 196, 0.3) !important;
+      }
     }
   }
 
-  // Autoridades agregadas dark mode
+  .invalid-feedback {
+    color: #ff6b6b !important;
+  }
+
   .autoridades-agregadas {
     h6 {
       color: var(--dark-accent) !important;
@@ -656,18 +1195,15 @@ $magenta-primary: #C42C7A;
     }
   }
 
-  // Card component dark mode
   .card {
     background: var(--dark-bg-tertiary) !important;
     border-color: var(--dark-border) !important;
   }
 
-  // Text muted
   .text-muted {
     color: var(--dark-text-muted) !important;
   }
 
-  // Upload area dark mode
   .upload-area {
     p {
       color: var(--dark-text-primary) !important;
@@ -709,8 +1245,9 @@ $magenta-primary: #C42C7A;
     }
   }
 
-  // Action buttons dark mode
-  .action-buttons {
-    border-top-color: var(--dark-border) !important;
+  .form-group {
+    label {
+      color: var(--dark-text-primary) !important;
+    }
   }
 }

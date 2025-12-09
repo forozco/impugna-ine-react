@@ -7,8 +7,65 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useStepperStore } from '../../stores/stepperStore';
 import Stepper from '../../components/shared/stepper/Stepper';
-import { ButtonPrimario, ButtonSecundario } from '../../components/ui';
+import FileUploader from '../../components/shared/FileUploader/FileUploader';
+import type { FileUploaderConfig, ArchivoMetadata } from '../../components/shared/FileUploader/FileUploader';
 import './RegistroImpugnacionPage.scss';
+
+// FileUploader configurations for each step (igual que Angular)
+const PERSONALIDAD_UPLOADER_CONFIG: FileUploaderConfig = {
+  acceptedFileTypes: ['.pdf', '.jpg', '.jpeg', '.png'],
+  acceptedMimeTypes: ['application/pdf', 'image/jpeg', 'image/png'],
+  maxFileSizeMB: 50,
+  maxFiles: 10,
+  maxFileNameLength: 240,
+  allowMultiple: true,
+  allowZip: false,
+  required: false,
+  validateMagicNumber: true,
+  title: 'Acreditación de personalidad',
+  subtitle: 'PDF, JPG, PNG (máx 50MB por archivo)',
+  tooltip: 'Sube los documentos que acrediten tu personalidad como representante'
+};
+
+const DEMANDA_UPLOADER_CONFIG: FileUploaderConfig = {
+  acceptedFileTypes: ['.pdf'],
+  acceptedMimeTypes: ['application/pdf'],
+  maxFileSizeMB: 200,
+  maxFiles: 1,
+  maxFileNameLength: 240,
+  allowMultiple: false,
+  allowZip: false,
+  required: true,
+  validateMagicNumber: true,
+  title: 'Demanda de impugnación',
+  subtitle: 'PDF (máx 200MB)',
+  tooltip: 'Sube la demanda de la impugnación en un solo archivo PDF'
+};
+
+const EVIDENCIA_UPLOADER_CONFIG: FileUploaderConfig = {
+  acceptedFileTypes: ['.jpg', '.jpeg', '.png', '.bmp', '.pdf', '.mp4', '.mov', '.avi', '.mp3', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.zip', '.txt'],
+  acceptedMimeTypes: [
+    'image/jpeg', 'image/png', 'image/bmp',
+    'application/pdf',
+    'video/mp4', 'video/quicktime', 'video/x-msvideo',
+    'audio/mpeg',
+    'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/zip', 'application/x-zip-compressed',
+    'text/plain'
+  ],
+  maxFileSizeMB: 1024, // 1GB
+  maxFiles: 50,
+  maxFileNameLength: 240,
+  allowMultiple: true,
+  allowZip: true,
+  required: false,
+  validateMagicNumber: true,
+  title: 'Pruebas y anexos',
+  subtitle: 'JPG, PNG, BMP, PDF, MP4, MOV, AVI, MP3, DOC, DOCX, XLS, XLSX, PPT, PPTX, ZIP, TXT (máx 1GB por archivo)',
+  tooltip: 'Adjunta las pruebas y documentos que soporten tu impugnación'
+};
 
 // Step configurations (igual que Angular)
 const STEP_CONFIGS = [
@@ -33,7 +90,6 @@ const RegistroImpugnacionPage = () => {
     currentStep,
     setCurrentStep,
     reset,
-    totalSteps,
     setStepConfigs,
     markStepAsValid,
     updateFormData
@@ -47,6 +103,8 @@ const RegistroImpugnacionPage = () => {
   // Get query params
   const tipo = searchParams.get('tipo') || 'registro';
   const expediente = searchParams.get('expediente');
+  const isCoadyuvante = tipo === 'coadyuvante';
+  const isAmpliacion = tipo === 'ampliacion';
 
   // Track previous step for back navigation
   const [previousStep, setPreviousStep] = useState<number | null>(null);
@@ -73,10 +131,18 @@ const RegistroImpugnacionPage = () => {
     descripcion: '',
   });
 
-  // Get wizard title based on tipo
+  // File upload states for each step (storing actual File objects)
+  const [personalidadFiles, setPersonalidadFiles] = useState<File[]>([]);
+  const [demandaFiles, setDemandaFiles] = useState<File[]>([]);
+  const [evidenciaFiles, setEvidenciaFiles] = useState<File[]>([]);
+
+  // Validation states for uploaders
+  const [isDemandaValid, setIsDemandaValid] = useState(false);
+
+  // Get wizard title based on tipo (igual que Angular formService.wizardTitle())
   const getWizardTitle = () => {
-    if (tipo === 'ampliacion') return 'Registrar una ampliación de demanda';
-    if (tipo === 'coadyuvante') return 'Registrar tercero interesado-Coadyuvante';
+    if (isAmpliacion) return 'Registrar una ampliación de demanda';
+    if (isCoadyuvante) return 'Registrar tercero interesado-Coadyuvante';
     return 'Registrar una nueva impugnación';
   };
 
@@ -96,6 +162,12 @@ const RegistroImpugnacionPage = () => {
     markStepAsValid(0, true);
     // Representante va a step 1
     setCurrentStep(1);
+  };
+
+  // Step 0: Handle back button
+  const handleBackFromStep0 = () => {
+    reset();
+    navigate('/registro');
   };
 
   // Step 1: Add representante
@@ -215,36 +287,24 @@ const RegistroImpugnacionPage = () => {
     navigate('/revision-impugnacion');
   };
 
-  const handleBack = () => {
-    reset();
-    navigate('/registro');
-  };
-
-  const isStepValid = (): boolean => {
-    switch (currentStep) {
-      case 0:
-        return true; // Step 0 navigation is done via buttons
-      case 1:
-        return isStep1Valid();
-      case 2:
-        return true; // Personalidad is optional
-      case 3:
-        return isStep3Valid();
-      case 4:
-        return isStep4Valid();
-      case 5:
-        return true; // Evidencia is optional
-      default:
-        return true;
-    }
-  };
-
   // Only letters filter (igual que Angular)
   const onlyLetters = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const char = e.key;
     const allowedPattern = /^[a-zA-ZáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙäëïöüÄËÏÖÜâêîôûÂÊÎÔÛãõÃÕçÇñÑ\s'\-]$/;
     if (char.length === 1 && !allowedPattern.test(char)) {
       e.preventDefault();
+    }
+  };
+
+  // Handle keyboard navigation for radio cards (igual que Angular)
+  const onRadioCardKeyDown = (e: React.KeyboardEvent, option: 'titular' | 'representante') => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (option === 'titular') {
+        navigateToTitular();
+      } else {
+        navigateToRepresentante();
+      }
     }
   };
 
@@ -257,13 +317,12 @@ const RegistroImpugnacionPage = () => {
               <p className="dato-obligatorio">Dato obligatorio <span className="text-danger">(*)</span></p>
 
               <label className="form-label fw-bold step-main-label">
-                {tipo === 'ampliacion'
-                  ? 'Elige al actor que va a registrar una ampliación de demanda'
-                  : tipo === 'coadyuvante'
+                {isAmpliacion
+                  ? <>Elige al actor que va a registrar una ampliación de demanda<span className="text-danger">*</span></>
+                  : isCoadyuvante
                     ? 'Elige el tipo de persona que registra la tercería'
                     : 'Elige el tipo de persona que registra la impugnación'
                 }
-                <span className="text-danger">*</span>
               </label>
 
               <div className="radio-group">
@@ -271,16 +330,16 @@ const RegistroImpugnacionPage = () => {
                 <div
                   className="radio-card"
                   onClick={navigateToTitular}
-                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigateToTitular()}
+                  onKeyDown={(e) => onRadioCardKeyDown(e, 'titular')}
                   tabIndex={0}
                   role="radio"
                   aria-checked={false}
-                  aria-label={tipo === 'coadyuvante' ? 'Titular del registro' : 'Titular (Agraviado)'}
+                  aria-label={isCoadyuvante ? 'Titular del registro' : 'Titular (Agraviado)'}
                 >
                   <label className="d-flex align-items-center gap-2 w-100" style={{ cursor: 'pointer' }}>
                     <input type="radio" className="radio-custom" name="option" value="titular" tabIndex={-1} readOnly />
                     <span className="radio-label">
-                      {tipo === 'coadyuvante' ? 'Titular del registro' : 'Titular (Agraviado)'}
+                      {isCoadyuvante ? 'Titular del registro' : 'Titular (Agraviado)'}
                     </span>
                   </label>
                 </div>
@@ -289,7 +348,7 @@ const RegistroImpugnacionPage = () => {
                 <div
                   className="radio-card"
                   onClick={navigateToRepresentante}
-                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigateToRepresentante()}
+                  onKeyDown={(e) => onRadioCardKeyDown(e, 'representante')}
                   tabIndex={0}
                   role="radio"
                   aria-checked={false}
@@ -306,7 +365,7 @@ const RegistroImpugnacionPage = () => {
             <hr className="stepper-separator" />
 
             <div className="action-buttons">
-              <button type="button" className="btn btn-retroceder" onClick={handleBack}>
+              <button type="button" className="btn btn-retroceder" onClick={handleBackFromStep0}>
                 Retroceder
               </button>
             </div>
@@ -328,8 +387,8 @@ const RegistroImpugnacionPage = () => {
                     <input type="radio" className="radio-custom" name="option" value="representantes" checked readOnly tabIndex={-1} />
                     <span className="radio-label d-flex align-items-center gap-2">
                       Representante(s)
-                      <span className="tooltip-icon-custom">
-                        ?
+                      <span className="tooltip-icon-custom" tabIndex={0} role="button" aria-label="Información sobre representantes">
+                        <span className="icon-text">i</span>
                         <span className="tooltip-text">Asesores jurídicos, abogados o despachos, etc.</span>
                       </span>
                     </span>
@@ -393,6 +452,7 @@ const RegistroImpugnacionPage = () => {
                                 type="button"
                                 className="btn btn-outline-secondary square-btn"
                                 onClick={() => removeRepresentante(index)}
+                                aria-label="Eliminar representante"
                               >
                                 –
                               </button>
@@ -402,6 +462,7 @@ const RegistroImpugnacionPage = () => {
                               type="button"
                               className="btn btn-outline-secondary square-btn"
                               onClick={addRepresentante}
+                              aria-label="Agregar otro representante"
                             >
                               +
                             </button>
@@ -418,6 +479,22 @@ const RegistroImpugnacionPage = () => {
                 </div>
               </div>
             </div>
+
+            <hr className="stepper-separator" />
+
+            <div className="action-buttons">
+              <button type="button" className="btn btn-retroceder" onClick={handlePrev}>
+                Retroceder
+              </button>
+              <button
+                type="button"
+                className="btn btn-continuar"
+                onClick={handleNext}
+                disabled={!isStep1Valid()}
+              >
+                Continuar
+              </button>
+            </div>
           </div>
         );
 
@@ -427,13 +504,20 @@ const RegistroImpugnacionPage = () => {
             <h5>Acreditación de personalidad</h5>
             <p className="step-description">Sube los documentos que acrediten tu personalidad como representante (opcional)</p>
 
-            <div className="upload-area">
-              <div className="upload-box">
-                <div className="upload-icon">📄</div>
-                <p>Arrastra archivos aquí o haz clic para seleccionar</p>
-                <span className="upload-hint">PDF, JPG, PNG (máx 50MB)</span>
-                <button type="button" className="btn-upload">Seleccionar archivo</button>
-              </div>
+            <FileUploader
+              config={PERSONALIDAD_UPLOADER_CONFIG}
+              onFilesChange={setPersonalidadFiles}
+            />
+
+            <hr className="stepper-separator" />
+
+            <div className="action-buttons">
+              <button type="button" className="btn btn-retroceder" onClick={handlePrev}>
+                Retroceder
+              </button>
+              <button type="button" className="btn btn-continuar" onClick={handleNext}>
+                Continuar
+              </button>
             </div>
           </div>
         );
@@ -450,7 +534,7 @@ const RegistroImpugnacionPage = () => {
                 id="autoridadResponsable"
                 className="form-control form-select"
                 value={autoridadData.autoridadResponsable}
-                onChange={(e) => setAutoridadData({ ...autoridadData, autoridadResponsable: e.target.value })}
+                onChange={(e) => setAutoridadData({ ...autoridadData, autoridadResponsable: e.target.value, subopcion: '', estado: '', distrito: '' })}
               >
                 <option value="">Selecciona una autoridad</option>
                 <option value="Áreas centrales del INE">Áreas centrales del INE</option>
@@ -607,6 +691,22 @@ const RegistroImpugnacionPage = () => {
                 ))}
               </div>
             )}
+
+            <hr className="stepper-separator" />
+
+            <div className="action-buttons">
+              <button type="button" className="btn btn-retroceder" onClick={handlePrev}>
+                Retroceder
+              </button>
+              <button
+                type="button"
+                className="btn btn-continuar"
+                onClick={handleNext}
+                disabled={!isStep3Valid()}
+              >
+                Continuar
+              </button>
+            </div>
           </div>
         );
 
@@ -625,20 +725,36 @@ const RegistroImpugnacionPage = () => {
                 onChange={(e) => setImpugnacionData({ descripcion: e.target.value })}
                 placeholder="Describe los hechos que motivan la impugnación y los agravios causados..."
                 rows={8}
+                maxLength={1500}
               />
               <small className="text-muted">
-                {impugnacionData.descripcion.length} caracteres (mínimo 10)
+                {impugnacionData.descripcion.length}/1500 caracteres
               </small>
             </div>
 
             <div className="upload-area mt-4">
               <p className="mb-2"><strong>Sube la demanda de la impugnación en un solo archivo PDF</strong><span className="text-danger">*</span></p>
-              <div className="upload-box">
-                <div className="upload-icon">📄</div>
-                <p>Arrastra el archivo aquí o haz clic para seleccionar</p>
-                <span className="upload-hint">PDF (máx 200MB)</span>
-                <button type="button" className="btn-upload">Seleccionar archivo</button>
-              </div>
+              <FileUploader
+                config={DEMANDA_UPLOADER_CONFIG}
+                onFilesChange={setDemandaFiles}
+                onValidationChange={setIsDemandaValid}
+              />
+            </div>
+
+            <hr className="stepper-separator" />
+
+            <div className="action-buttons">
+              <button type="button" className="btn btn-retroceder" onClick={handlePrev}>
+                Retroceder
+              </button>
+              <button
+                type="button"
+                className="btn btn-continuar"
+                onClick={handleNext}
+                disabled={!isStep4Valid()}
+              >
+                Continuar
+              </button>
             </div>
           </div>
         );
@@ -661,6 +777,21 @@ const RegistroImpugnacionPage = () => {
             <div className="uploaded-files mt-3">
               <p className="files-hint">No hay archivos adjuntos todavía</p>
             </div>
+
+            <hr className="stepper-separator" />
+
+            <div className="action-buttons">
+              <button type="button" className="btn btn-retroceder" onClick={handlePrev}>
+                Retroceder
+              </button>
+              <button
+                type="button"
+                className="btn btn-continuar"
+                onClick={handleFinish}
+              >
+                Enviar Impugnación
+              </button>
+            </div>
           </div>
         );
 
@@ -669,13 +800,10 @@ const RegistroImpugnacionPage = () => {
     }
   };
 
-  // Don't show stepper navigation buttons on step 0
-  const showNavigationButtons = currentStep !== 0;
-
   return (
-    <section className="wizard-container">
+    <section className="wizard-container" role="main" aria-labelledby="wizard-title" tabIndex={-1}>
       <div className="wizard-content">
-        <h4>{getWizardTitle()}</h4>
+        <h4 id="wizard-title">{getWizardTitle()}</h4>
 
         {expediente && (
           <p className="expediente-info">
@@ -685,7 +813,7 @@ const RegistroImpugnacionPage = () => {
 
         <div className="space-my-0500"></div>
 
-        <h6>Avance del proceso de registro</h6>
+        <h6 id="wizard-description">Avance del proceso de registro</h6>
 
         <div className="space-my-0400"></div>
 
@@ -698,35 +826,6 @@ const RegistroImpugnacionPage = () => {
         <div className="step-container">
           {renderStepContent()}
         </div>
-
-        {showNavigationButtons && (
-          <div className="action-buttons">
-            <ButtonSecundario
-              onClick={handlePrev}
-              ariaLabel="Anterior"
-            >
-              Anterior
-            </ButtonSecundario>
-
-            {currentStep < totalSteps() - 1 ? (
-              <ButtonPrimario
-                onClick={handleNext}
-                disabled={!isStepValid()}
-                ariaLabel="Siguiente"
-              >
-                Siguiente
-              </ButtonPrimario>
-            ) : (
-              <ButtonPrimario
-                onClick={handleFinish}
-                disabled={!isStepValid()}
-                ariaLabel="Enviar Impugnación"
-              >
-                Enviar Impugnación
-              </ButtonPrimario>
-            )}
-          </div>
-        )}
       </div>
     </section>
   );
