@@ -5,7 +5,7 @@
  */
 
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useRegistroUsuarioStore } from '../../stores/registroUsuarioStore';
 import FileUploader from '../../components/shared/FileUploader/FileUploader';
 import type { FileUploaderConfig } from '../../components/shared/FileUploader/FileUploader';
@@ -68,8 +68,7 @@ const UPLOADER_CONFIG: FileUploaderConfig = {
 };
 
 // Constantes para validación de contraseña
-const VALID_SYMBOLS = '#$%&\'()*+,-./:;<=>?@[\\]^_{|}';
-const SYMBOL_REGEX = /[#$%&'()*+,\-./:;<=>?@\[\\\]^_{|}]/;
+const SYMBOL_REGEX = /[#$%&'()*+,\-./:;<=>?@[\\\]^_{|}]/;
 const LETTERS_REGEX = /^[a-zA-ZáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙäëïöüÄËÏÖÜâêîôûÂÊÎÔÛãõÃÕçÇñÑ\s'-]+$/;
 
 const RegistroNuevoUsuarioPage = () => {
@@ -136,7 +135,7 @@ const RegistroNuevoUsuarioPage = () => {
   const [archivos, setArchivos] = useState<File[]>([]);
 
   // Debounce ref for CP
-  const cpDebounceRef = useRef<NodeJS.Timeout | null>(null);
+  const cpDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Restore data from store on mount
   useEffect(() => {
@@ -163,6 +162,7 @@ const RegistroNuevoUsuarioPage = () => {
         aceptaTerminos: storedData.aceptaTerminos || false
       }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sync form data to store on changes
@@ -171,6 +171,7 @@ const RegistroNuevoUsuarioPage = () => {
       ...formData,
       archivos
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData, archivos]);
 
   // Clean up store when navigating away (except to revisar-data or registro-exitoso)
@@ -280,10 +281,6 @@ const RegistroNuevoUsuarioPage = () => {
     return formData.password === formData.confirmPassword && formData.confirmPassword.length > 0;
   }, [formData.password, formData.confirmPassword]);
 
-  const showPasswordMismatch = useMemo(() => {
-    return formData.confirmPassword.length > 0 && !passwordsMatch;
-  }, [formData.confirmPassword, passwordsMatch]);
-
   const emailsMatch = useMemo(() => {
     return formData.email === formData.confirmEmail && formData.confirmEmail.length > 0;
   }, [formData.email, formData.confirmEmail]);
@@ -301,10 +298,6 @@ const RegistroNuevoUsuarioPage = () => {
   const emailsMatchAndValid = useMemo(() => {
     return emailsMatch && isEmailValid && isConfirmEmailValid;
   }, [emailsMatch, isEmailValid, isConfirmEmailValid]);
-
-  const showEmailMismatch = useMemo(() => {
-    return formData.confirmEmail.length > 0 && !emailsMatch;
-  }, [formData.confirmEmail, emailsMatch]);
 
   const passwordRequirements = useMemo(() => ({
     minLength: formData.password.length >= 8,
@@ -391,17 +384,17 @@ const RegistroNuevoUsuarioPage = () => {
   }, [handleInputChange]);
 
   const onPasswordInput = useCallback((e: React.ChangeEvent<HTMLInputElement>, field: 'password' | 'confirmPassword') => {
-    let value = e.target.value;
+    const value = e.target.value;
 
     // Filter invalid characters
-    let filteredValue = value.replace(/[^a-zA-Z0-9#$%&'()*+,\-./:;<=>?@\[\\\]^_{|}]/g, '');
+    let filteredValue = value.replace(/[^a-zA-Z0-9#$%&'()*+,\-./:;<=>?@[\\\]^_{|}]/g, '');
 
     // Ensure only one symbol
-    const symbols = filteredValue.match(/[#$%&'()*+,\-./:;<=>?@\[\\\]^_{|}]/g);
+    const symbols = filteredValue.match(/[#$%&'()*+,\-./:;<=>?@[\\\]^_{|}]/g);
     if (symbols && symbols.length > 1) {
       let symbolCount = 0;
       filteredValue = filteredValue.split('').filter(char => {
-        const isSymbol = /[#$%&'()*+,\-./:;<=>?@\[\\\]^_{|}]/.test(char);
+        const isSymbol = /[#$%&'()*+,\-./:;<=>?@[\\\]^_{|}]/.test(char);
         if (isSymbol) {
           symbolCount++;
           return symbolCount === 1;
