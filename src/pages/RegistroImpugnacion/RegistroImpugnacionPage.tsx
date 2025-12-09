@@ -4,12 +4,15 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useStepperStore } from '../../stores/stepperStore';
 import Stepper from '../../components/shared/stepper/Stepper';
 import FileUploader from '../../components/shared/FileUploader/FileUploader';
-import type { FileUploaderConfig, ArchivoMetadata } from '../../components/shared/FileUploader/FileUploader';
+import type { FileUploaderConfig } from '../../components/shared/FileUploader/FileUploader';
 import './RegistroImpugnacionPage.scss';
+
+// Mapeo de nombres de paso a indices (igual que Angular)
+const STEP_NAMES = ['actores', 'representante', 'personalidad', 'autoridad', 'impugnacion', 'evidencia'];
 
 // FileUploader configurations for each step (igual que Angular)
 const PERSONALIDAD_UPLOADER_CONFIG: FileUploaderConfig = {
@@ -85,6 +88,7 @@ interface Representante {
 
 const RegistroImpugnacionPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const {
     currentStep,
@@ -99,6 +103,25 @@ const RegistroImpugnacionPage = () => {
   useEffect(() => {
     setStepConfigs(STEP_CONFIGS);
   }, [setStepConfigs]);
+
+  // Sincronizar paso desde la URL al cargar (igual que Angular syncStepFromUrl)
+  useEffect(() => {
+    const pathParts = location.pathname.split('/');
+    const lastSegment = pathParts[pathParts.length - 1];
+    const stepIndex = STEP_NAMES.indexOf(lastSegment);
+
+    if (stepIndex >= 0 && stepIndex !== currentStep) {
+      setCurrentStep(stepIndex);
+    }
+  }, [location.pathname, currentStep, setCurrentStep]);
+
+  // Navegar a la URL del paso (igual que Angular navigateToStep)
+  const navigateToStep = useCallback((stepIndex: number) => {
+    const stepName = STEP_NAMES[stepIndex] || 'actores';
+    const queryString = searchParams.toString();
+    const newPath = `/registro-impugnacion/${stepName}${queryString ? `?${queryString}` : ''}`;
+    navigate(newPath, { replace: false });
+  }, [navigate, searchParams]);
 
   // Get query params
   const tipo = searchParams.get('tipo') || 'registro';
@@ -153,6 +176,7 @@ const RegistroImpugnacionPage = () => {
     markStepAsValid(0, true);
     // Titular salta directamente a step 3 (Autoridad)
     setCurrentStep(3);
+    navigateToStep(3);
   };
 
   // Step 0: Navigate to Representante flow
@@ -162,6 +186,7 @@ const RegistroImpugnacionPage = () => {
     markStepAsValid(0, true);
     // Representante va a step 1
     setCurrentStep(1);
+    navigateToStep(1);
   };
 
   // Step 0: Handle back button
@@ -245,9 +270,11 @@ const RegistroImpugnacionPage = () => {
         }
       });
       setCurrentStep(2);
+      navigateToStep(2);
     } else if (currentStep === 2) {
       // Step 2 is optional, just move forward
       setCurrentStep(3);
+      navigateToStep(3);
     } else if (currentStep === 3) {
       // Save step 3 data
       updateFormData({
@@ -256,6 +283,7 @@ const RegistroImpugnacionPage = () => {
         }
       });
       setCurrentStep(4);
+      navigateToStep(4);
     } else if (currentStep === 4) {
       // Save step 4 data
       updateFormData({
@@ -265,6 +293,7 @@ const RegistroImpugnacionPage = () => {
         }
       });
       setCurrentStep(5);
+      navigateToStep(5);
     }
   };
 
@@ -273,12 +302,16 @@ const RegistroImpugnacionPage = () => {
       // If we came from step 0 (Titular flow), go back to step 0
       setPreviousStep(null);
       setCurrentStep(0);
+      navigateToStep(0);
     } else if (currentStep === 1) {
       // From step 1, go back to step 0
       setCurrentStep(0);
+      navigateToStep(0);
     } else {
       // Normal flow
-      setCurrentStep(currentStep - 1);
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      navigateToStep(prevStep);
     }
   };
 
@@ -818,7 +851,10 @@ const RegistroImpugnacionPage = () => {
         <div className="space-my-0400"></div>
 
         <Stepper
-          onStepClick={(index) => setCurrentStep(index)}
+          onStepClick={(index) => {
+            setCurrentStep(index);
+            navigateToStep(index);
+          }}
           showProgress={false}
           showTitle={true}
         />

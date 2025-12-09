@@ -105,10 +105,184 @@ export interface AcuseResponse {
   message?: string;
 }
 
+// Respuesta del endpoint /consulta-impugnacion/folio
+export interface ConsultaFolioBackendResponse {
+  folio?: string;
+  promovente?: string;
+  descripcionImpugna?: string;
+  fechaRecepcion?: string;
+  fechaRetiro?: string;
+  mensaje?: string;
+}
+
+export interface ConsultaFolioResponse {
+  success: boolean;
+  folio: string;
+  promovente: string;
+  descripcionImpugna: string;
+  fechaRecepcion: string;
+  fechaRetiro: string | null;
+  mensaje?: string;
+}
+
+// Respuesta del endpoint /consulta-impugnacion/consulta (para expedientes)
+export interface ConsultaExpedienteBackendResponse {
+  codigo?: number;
+  data?: unknown;
+  expediente?: string;
+  folio?: string;
+  mensaje?: string;
+}
+
+export interface ConsultaExpedienteResponse {
+  success: boolean;
+  expedienteEncontrado: boolean;
+  mensaje?: string;
+}
+
 /**
  * Servicio de consulta de impugnaciones
  */
 export const consultaService = {
+  /**
+   * Consultar expediente para ampliación, coadyuvante o amicus
+   * Endpoint: POST /consulta-impugnacion/consulta
+   * Body: { folio: string }
+   */
+  async consultarExpediente(folio: string): Promise<ConsultaExpedienteResponse> {
+    console.log('[CONSULTA] Consultando expediente:', folio);
+
+    try {
+      const response = await httpClient.post<ConsultaExpedienteBackendResponse>(
+        consultaEndpoints.porExpediente,
+        { folio: folio.trim() }
+      );
+
+      console.log('[CONSULTA] Respuesta del servicio:', response);
+
+      // Verificar si la respuesta indica que se encontró el expediente
+      // Un 200 OK con respuesta válida significa que el expediente existe
+      const expedienteEncontrado = response && (
+        response.codigo === 0 ||
+        response.codigo === undefined ||  // Si no hay codigo, asumimos éxito
+        response.data ||
+        response.expediente ||
+        response.folio  // Algunos endpoints devuelven el folio directamente
+      );
+
+      if (expedienteEncontrado) {
+        return {
+          success: true,
+          expedienteEncontrado: true
+        };
+      } else {
+        return {
+          success: false,
+          expedienteEncontrado: false,
+          mensaje: 'No se encontró el expediente con el folio ingresado'
+        };
+      }
+    } catch (error: unknown) {
+      console.error('[CONSULTA] Error al consultar expediente:', error);
+
+      const errorObj = error as { status?: number; response?: { data?: { mensaje?: string } } };
+
+      // Manejar diferentes tipos de error
+      if (errorObj.status === 404) {
+        return {
+          success: false,
+          expedienteEncontrado: false,
+          mensaje: 'No se encontró el expediente con el folio ingresado'
+        };
+      } else if (errorObj.status === 0) {
+        return {
+          success: false,
+          expedienteEncontrado: false,
+          mensaje: 'No se pudo conectar con el servidor. Intenta de nuevo.'
+        };
+      } else {
+        return {
+          success: false,
+          expedienteEncontrado: false,
+          mensaje: errorObj.response?.data?.mensaje || 'Error al buscar el expediente. Intenta de nuevo.'
+        };
+      }
+    }
+  },
+
+  /**
+   * Consultar impugnacion por folio
+   * Endpoint: POST /consulta-impugnacion/folio
+   * Body: { folio: string }
+   */
+  async consultarPorFolio(folio: string): Promise<ConsultaFolioResponse> {
+    console.log('[CONSULTA] Consultando por folio:', folio);
+
+    try {
+      const response = await httpClient.post<ConsultaFolioBackendResponse>(
+        consultaEndpoints.porFolio,
+        { folio: folio.trim() }
+      );
+
+      console.log('[CONSULTA] Respuesta del servidor:', response);
+
+      // Verificar si el backend indica que no existe el folio
+      if (response?.mensaje?.includes('No existe un registro')) {
+        return {
+          success: false,
+          folio: folio,
+          promovente: '',
+          descripcionImpugna: '',
+          fechaRecepcion: '',
+          fechaRetiro: null,
+          mensaje: response.mensaje
+        };
+      }
+
+      // Respuesta exitosa
+      return {
+        success: true,
+        folio: response.folio || folio,
+        promovente: response.promovente || 'N/A',
+        descripcionImpugna: response.descripcionImpugna || 'N/A',
+        fechaRecepcion: response.fechaRecepcion || '',
+        fechaRetiro: response.fechaRetiro || null,
+        mensaje: response.mensaje
+      };
+    } catch (error: unknown) {
+      console.error('[CONSULTA] Error consultando folio:', error);
+
+      // Manejar error de "No existe"
+      const errorObj = error as { response?: { data?: { folio?: string; mensaje?: string; message?: string } } };
+      const errorBody = errorObj?.response?.data;
+      let errorMsg = '';
+
+      if (typeof errorBody === 'string') {
+        errorMsg = errorBody;
+      } else if (errorBody?.folio) {
+        errorMsg = errorBody.folio;
+      } else if (errorBody?.mensaje) {
+        errorMsg = errorBody.mensaje;
+      } else if (errorBody?.message) {
+        errorMsg = errorBody.message;
+      }
+
+      if (errorMsg && errorMsg.includes('No existe un registro')) {
+        return {
+          success: false,
+          folio: folio,
+          promovente: '',
+          descripcionImpugna: '',
+          fechaRecepcion: '',
+          fechaRetiro: null,
+          mensaje: errorMsg
+        };
+      }
+
+      throw error;
+    }
+  },
+
   /**
    * Buscar impugnaciones con filtros
    */

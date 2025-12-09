@@ -47,6 +47,36 @@ export interface RegistroUsuarioResponse {
   error?: string;
 }
 
+// Interface que coincide con la respuesta real del backend
+export interface UsuarioPerfil {
+  idUsuario: number;
+  nombrePersona: string;
+  apellidoPaternoPersona: string;
+  apellidoMaternoPersona: string;
+  generoPersona: string;
+  fechaAltaPersona: string;
+  usuarioConDomicilio: boolean;
+  codigoPostal: string | null;
+  ciudad: string | null;
+  colonia: string | null;
+  callePersona: string | null;
+  numIntPersona: string | null;
+  numExtPersona: string | null;
+  estadoGeo: string | null;
+  municipioGeo: string | null;
+  fechaHora: string;
+  userActPersona: string;
+}
+
+// Respuesta del endpoint de perfil
+export interface PerfilBackendResponse {
+  usuarioConDomicilio: boolean;
+  success: boolean;
+  mensaje: string;
+  data: UsuarioPerfil;
+}
+
+// Interface normalizada para uso interno (mantener compatibilidad)
 export interface PerfilUsuario {
   id: number;
   nombre: string;
@@ -67,8 +97,9 @@ export interface PerfilUsuario {
 
 export interface PerfilResponse {
   success: boolean;
-  usuario: PerfilUsuario;
-  message?: string;
+  usuarioConDomicilio: boolean;
+  data: UsuarioPerfil;
+  mensaje?: string;
 }
 
 /**
@@ -121,17 +152,28 @@ export const usuariosService = {
 
   /**
    * Obtener perfil de usuario por ID
+   * El backend devuelve: { usuarioConDomicilio, success, mensaje, data: UsuarioPerfil }
    */
   async getPerfil(usuarioId: number): Promise<PerfilResponse> {
     try {
       console.log('[USUARIOS] Obteniendo perfil del usuario:', usuarioId);
 
-      const response = await httpClient.get<PerfilResponse>(
+      const response = await httpClient.get<PerfilBackendResponse>(
         usuariosEndpoints.getPerfil(usuarioId)
       );
 
-      console.log('[USUARIOS] Perfil response:', response);
-      return response;
+      console.log('[USUARIOS] Perfil response (raw):', response);
+
+      // Transformar al formato esperado
+      const transformedResponse: PerfilResponse = {
+        success: response.success,
+        usuarioConDomicilio: response.usuarioConDomicilio || response.data?.usuarioConDomicilio || false,
+        data: response.data,
+        mensaje: response.mensaje
+      };
+
+      console.log('[USUARIOS] Perfil response (transformed):', transformedResponse);
+      return transformedResponse;
     } catch (error) {
       console.error('[USUARIOS] Error obteniendo perfil:', error);
       throw error;

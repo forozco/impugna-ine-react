@@ -25,7 +25,7 @@ export { httpClient, HttpError } from './httpClient';
 
 // Servicios
 export { authService, type LoginRequest, type LoginResponse, type OtpVerificationRequest, type OtpVerificationResponse } from './authService';
-export { usuariosService, type RegistroUsuarioRequest, type RegistroUsuarioResponse, type PerfilUsuario } from './usuariosService';
+export { usuariosService, type RegistroUsuarioRequest, type RegistroUsuarioResponse, type PerfilUsuario, type UsuarioPerfil, type PerfilResponse } from './usuariosService';
 export { catalogosService, type Autoridad, type Area, type Estado, type CatalogosResponse } from './catalogosService';
 export {
   impugnacionService,
@@ -51,7 +51,9 @@ export {
   type ImpugnacionResumen,
   type ConsultaResponse,
   type DetalleImpugnacion,
-  type AcuseResponse
+  type AcuseResponse,
+  type ConsultaFolioResponse,
+  type ConsultaExpedienteResponse
 } from './consultaService';
 export {
   firmadoService,

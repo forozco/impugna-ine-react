@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { consultaService } from '../../services/api';
 import './ConsultaImpugnacionPage.scss';
 
 type EstatusType = 'tramite' | 'registrado' | 'en_tramite' | 'publicado' | 'retirado';
@@ -24,6 +25,7 @@ const ConsultaImpugnacionPage = () => {
   const [folio, setFolio] = useState('');
   const [folioValido, setFolioValido] = useState(false);
   const [folioNoExiste, setFolioNoExiste] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [loading, setLoading] = useState(false);
   const [impugnaciones, setImpugnaciones] = useState<Impugnacion[]>([]);
@@ -56,39 +58,51 @@ const ConsultaImpugnacionPage = () => {
     }
   };
 
-  const validarFolio = useCallback(() => {
-    if (!folio.trim()) {
+  const validarFolio = useCallback(async (folioToValidate?: string) => {
+    const folioValue = folioToValidate || folio;
+
+    if (!folioValue.trim()) {
       setFolioValido(false);
       setFolioNoExiste(false);
+      setErrorMessage(null);
       return;
     }
 
     setLoading(true);
     setFolioNoExiste(false);
+    setErrorMessage(null);
 
-    // Simulacion de llamada al backend
-    // En produccion, esto seria una llamada real al endpoint /consulta-impugna/folio
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const response = await consultaService.consultarPorFolio(folioValue.trim());
 
-      // Simulamos que el folio existe si contiene "INE-FOLIO"
-      if (folio.includes('INE-FOLIO')) {
+      console.log('[CONSULTA] Respuesta del servidor:', response);
+
+      if (response.success) {
         setFolioValido(true);
         setFolioNoExiste(false);
         setImpugnaciones([{
-          expediente: folio,
-          promovente: 'Nombre del Promovente',
-          actoImpugnado: 'Descripcion del acto impugnado que puede ser muy larga y se truncara en la tabla',
-          registro: formatearFecha(new Date().toISOString()),
-          retiro: 'N/A',
+          expediente: response.folio,
+          promovente: response.promovente,
+          actoImpugnado: response.descripcionImpugna,
+          registro: formatearFecha(response.fechaRecepcion),
+          retiro: response.fechaRetiro ? formatearFecha(response.fechaRetiro) : 'N/A',
           estatus: 'registrado'
         }]);
       } else {
         setFolioValido(false);
         setFolioNoExiste(true);
+        setErrorMessage(response.mensaje || `No existe un registro con el folio: ${folioValue}`);
         setImpugnaciones([]);
       }
-    }, 1500);
+    } catch (error) {
+      console.error('[CONSULTA] Error consultando folio:', error);
+      // Error de conexion u otro - no mostrar nada
+      setFolioValido(false);
+      setFolioNoExiste(false);
+      setImpugnaciones([]);
+    } finally {
+      setLoading(false);
+    }
   }, [folio]);
 
   useEffect(() => {
@@ -98,36 +112,14 @@ const ConsultaImpugnacionPage = () => {
       setFolio(decodedFolio);
       // Ejecutar busqueda automaticamente despues de setear el folio
       setTimeout(() => {
-        if (decodedFolio.trim()) {
-          setLoading(true);
-          setFolioNoExiste(false);
-
-          setTimeout(() => {
-            setLoading(false);
-            if (decodedFolio.includes('INE-FOLIO')) {
-              setFolioValido(true);
-              setFolioNoExiste(false);
-              setImpugnaciones([{
-                expediente: decodedFolio,
-                promovente: 'Nombre del Promovente',
-                actoImpugnado: 'Descripcion del acto impugnado',
-                registro: formatearFecha(new Date().toISOString()),
-                retiro: 'N/A',
-                estatus: 'registrado'
-              }]);
-            } else {
-              setFolioValido(false);
-              setFolioNoExiste(true);
-              setImpugnaciones([]);
-            }
-          }, 1500);
-        }
+        validarFolio(decodedFolio);
       }, 100);
     }
-  }, [searchParams]);
+  }, [searchParams, validarFolio]);
 
   const limpiarError = () => {
     setFolioNoExiste(false);
+    setErrorMessage(null);
   };
 
   const hideTooltipInfo = () => {
@@ -158,6 +150,10 @@ const ConsultaImpugnacionPage = () => {
     if (e.key === 'Enter') {
       validarFolio();
     }
+  };
+
+  const handleBuscar = () => {
+    validarFolio();
   };
 
   return (
@@ -196,7 +192,7 @@ const ConsultaImpugnacionPage = () => {
               <button
                 type="button"
                 className="btn-buscar"
-                onClick={validarFolio}
+                onClick={handleBuscar}
                 disabled={!folio.trim() || loading}
                 aria-label="Buscar impugnacion por folio"
               >
@@ -212,7 +208,9 @@ const ConsultaImpugnacionPage = () => {
 
             {folioNoExiste && (
               <div className="folio-status folio-error" role="alert" aria-live="assertive">
-                <span className="status-badge status-badge-error">No existe un registro con el folio: {folio}</span>
+                <span className="status-badge status-badge-error">
+                  {errorMessage || `No existe un registro con el folio: ${folio}`}
+                </span>
               </div>
             )}
           </div>

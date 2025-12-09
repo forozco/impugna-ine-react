@@ -2,11 +2,12 @@
  * Pagina de Login - Equivalente a login.component.ts de Angular
  */
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { useAlertStore } from '../../stores/alertStore';
 import { useThemeStore } from '../../stores/themeStore';
+import { authService } from '../../services/api';
 import { ButtonPrimario } from '../../components/ui';
 import './LoginPage.scss';
 
@@ -20,13 +21,27 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showOtpMessage, setShowOtpMessage] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otpCode, setOtpCode] = useState(['', '', '', '', '', '']);
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [resendingOtp, setResendingOtp] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  // Refs para los inputs de OTP
+  const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const emailError = emailTouched && (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
   const passwordError = passwordTouched && !password;
+
+  // Cooldown timer para reenviar OTP
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,33 +49,132 @@ const LoginPage = () => {
     setErrorMsg('');
 
     try {
-      // Simulacion de login - reemplazar con llamada real a API
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Llamada real al servicio de autenticación
+      const response = await authService.login({
+        mailPersona: email,
+        password: password
+      });
 
-      if (email && password) {
-        // Mostrar mensaje de OTP enviado
-        setShowOtpMessage(true);
+      console.log('[LOGIN] Response:', response);
 
-        // Esperar y luego hacer login
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        login(
-          {
-            id: '1',
-            email,
-            nombre: email.split('@')[0]
-          },
-          'fake-jwt-token'
-        );
-        navigate('/');
-      } else {
-        setErrorMsg('Por favor ingresa tu email y contrasena');
+      if (response.success && response.requiresOtp) {
+        // El servidor envió el OTP, mostrar pantalla de ingreso de código
+        setShowOtpInput(true);
+        setResendCooldown(60); // 60 segundos de cooldown para reenviar
+        // Focus en el primer input de OTP
+        setTimeout(() => otpInputRefs.current[0]?.focus(), 100);
+      } else if (!response.success) {
+        setErrorMsg(response.message || 'Credenciales incorrectas');
       }
-    } catch {
-      await showError('Error', 'Error al iniciar sesion. Intenta de nuevo.');
+    } catch (error) {
+      console.error('[LOGIN] Error:', error);
+      await showError('Error', 'Error al iniciar sesión. Intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleOtpChange = (index: number, value: string) => {
+    // Solo permitir dígitos
+    if (value && !/^\d$/.test(value)) return;
+
+    const newOtp = [...otpCode];
+    newOtp[index] = value;
+    setOtpCode(newOtp);
+
+    // Auto-avanzar al siguiente input
+    if (value && index < 5) {
+      otpInputRefs.current[index + 1]?.focus();
+    }
+
+    // Si se completaron todos los dígitos, verificar automáticamente
+    if (value && index === 5 && newOtp.every(digit => digit !== '')) {
+      verifyOtp(newOtp.join(''));
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Retroceder al input anterior con Backspace
+    if (e.key === 'Backspace' && !otpCode[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (pastedData.length === 6) {
+      const newOtp = pastedData.split('');
+      setOtpCode(newOtp);
+      verifyOtp(pastedData);
+    }
+  };
+
+  const verifyOtp = async (code: string) => {
+    setIsLoading(true);
+    setErrorMsg('');
+
+    try {
+      const response = await authService.verificarCodigo({
+        mailPersona: email,
+        codigoOTP: code
+      });
+
+      console.log('[LOGIN] Verify OTP response:', response);
+
+      if (response.success) {
+        // Login exitoso, guardar en el store
+        login(
+          {
+            id: String(response.usuario.id),
+            email: response.usuario.email,
+            nombre: response.usuario.nombre
+          },
+          response.token
+        );
+        navigate('/');
+      } else {
+        setErrorMsg(response.message || 'Código incorrecto');
+        // Limpiar OTP para reintentar
+        setOtpCode(['', '', '', '', '', '']);
+        otpInputRefs.current[0]?.focus();
+      }
+    } catch (error) {
+      console.error('[LOGIN] Error verifying OTP:', error);
+      setErrorMsg('Error al verificar el código. Intenta de nuevo.');
+      setOtpCode(['', '', '', '', '', '']);
+      otpInputRefs.current[0]?.focus();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0 || resendingOtp) return;
+
+    setResendingOtp(true);
+    setErrorMsg('');
+
+    try {
+      const response = await authService.reenviarOtp(email);
+      if (response.success) {
+        setResendCooldown(60);
+        // Opcional: mostrar mensaje de éxito
+      } else {
+        setErrorMsg(response.message || 'Error al reenviar el código');
+      }
+    } catch (error) {
+      console.error('[LOGIN] Error resending OTP:', error);
+      setErrorMsg('Error al reenviar el código');
+    } finally {
+      setResendingOtp(false);
+    }
+  };
+
+  const handleBackToLogin = () => {
+    setShowOtpInput(false);
+    setOtpCode(['', '', '', '', '', '']);
+    setErrorMsg('');
   };
 
   const togglePasswordVisibility = () => {
@@ -79,22 +193,75 @@ const LoginPage = () => {
       </div>
 
       <section className="login-box" aria-labelledby="login-instructions">
-        {/* Mensaje de OTP enviado */}
-        {showOtpMessage ? (
-          <div className="otp-message" role="alert" aria-live="polite">
-            <div className="success-animation">
-              <div className="checkmark-circle">
-                <div className="checkmark"></div>
-              </div>
+        {/* Pantalla de ingreso de OTP */}
+        {showOtpInput ? (
+          <div className="otp-section" role="form" aria-label="Ingreso de código de verificación">
+            <div className="otp-header">
+              <button
+                type="button"
+                className="back-button"
+                onClick={handleBackToLogin}
+                aria-label="Volver al login"
+              >
+                <i className="bi bi-arrow-left"></i>
+              </button>
+              <h5 className="otp-title">Verificación de seguridad</h5>
             </div>
-            <h5 className="otp-title">¡Codigo enviado!</h5>
+
             <p className="otp-text">
-              Se ha enviado un codigo de seguridad de 6 digitos a tu correo electronico.
+              Ingresa el código de 6 dígitos enviado a:
             </p>
-            <p className="otp-subtext">
-              <i className="fas fa-envelope otp-icon" aria-hidden="true"></i>
-              Por favor revisa tu bandeja de entrada
-            </p>
+            <p className="otp-email">{email}</p>
+
+            <div className="otp-inputs" onPaste={handleOtpPaste}>
+              {otpCode.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(el) => { otpInputRefs.current[index] = el; }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(index, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                  className={`otp-input ${errorMsg ? 'error' : ''}`}
+                  disabled={isLoading}
+                  aria-label={`Dígito ${index + 1} del código`}
+                />
+              ))}
+            </div>
+
+            {errorMsg && (
+              <span className="error-message" role="alert" aria-live="polite">{errorMsg}</span>
+            )}
+
+            {isLoading && (
+              <div className="otp-loading">
+                <span className="spinner"></span>
+                <span>Verificando...</span>
+              </div>
+            )}
+
+            <div className="otp-resend">
+              <p className="otp-resend-text">¿No recibiste el código?</p>
+              <button
+                type="button"
+                className={`resend-button ${resendCooldown > 0 ? 'disabled' : ''}`}
+                onClick={handleResendOtp}
+                disabled={resendCooldown > 0 || resendingOtp}
+              >
+                {resendingOtp ? (
+                  <>
+                    <span className="spinner-small"></span>
+                    Enviando...
+                  </>
+                ) : resendCooldown > 0 ? (
+                  `Reenviar en ${resendCooldown}s`
+                ) : (
+                  'Reenviar código'
+                )}
+              </button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} aria-describedby="login-instructions">

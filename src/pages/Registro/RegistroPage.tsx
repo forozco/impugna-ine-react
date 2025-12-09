@@ -3,8 +3,9 @@
  * Equivalente a: registro.component.ts de Angular
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { consultaService } from '../../services/api';
 import './RegistroPage.scss';
 
 type ExpandedType = 'ampliacion' | 'coadyuvante' | 'amicus' | null;
@@ -33,7 +34,21 @@ const RegistroPage = () => {
   const [errorCoadyuvante, setErrorCoadyuvante] = useState<string | null>(null);
   const [errorAmicus, setErrorAmicus] = useState<string | null>(null);
 
+  /**
+   * Verifica si hay un error visible para el tipo dado
+   */
+  const tieneError = useCallback((tipo: ExpandedType): boolean => {
+    if (tipo === 'ampliacion') return !!errorAmpliacion;
+    if (tipo === 'coadyuvante') return !!errorCoadyuvante;
+    if (tipo === 'amicus') return !!errorAmicus;
+    return false;
+  }, [errorAmpliacion, errorCoadyuvante, errorAmicus]);
+
   const handleExpand = (tipo: ExpandedType) => {
+    // Si hay un error visible para este tipo, no colapsar
+    if (expanded === tipo && tieneError(tipo)) {
+      return;
+    }
     setExpanded(expanded === tipo ? null : tipo);
   };
 
@@ -54,50 +69,73 @@ const RegistroPage = () => {
     if (tipo === 'amicus') setErrorAmicus(null);
   };
 
-  const buscarAmpliacion = () => {
-    if (!isAmpliacionValid()) return;
-    setBuscandoAmpliacion(true);
-    setErrorAmpliacion(null);
+  /**
+   * Reemplaza / por - para URLs limpias
+   */
+  const encodeForUrl = (folio: string): string => {
+    return folio.replace(/\//g, '-');
+  };
 
-    // Simulacion de busqueda
-    setTimeout(() => {
-      setBuscandoAmpliacion(false);
-      if (folioAmpliacion.includes('INE-FOLIO')) {
-        navigate(`/registro-impugnacion?tipo=ampliacion&expediente=${encodeURIComponent(folioAmpliacion)}`);
+  /**
+   * Consulta el expediente en el backend antes de navegar
+   */
+  const consultarExpediente = async (
+    folio: string,
+    tipo: 'ampliacion' | 'coadyuvante' | 'amicus',
+    setLoading: (v: boolean) => void,
+    setError: (v: string | null) => void
+  ) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await consultaService.consultarExpediente(folio);
+
+      console.log('[REGISTRO] Respuesta del servicio:', response);
+
+      if (response.expedienteEncontrado) {
+        // Expediente encontrado, navegar a selección
+        navigate(`/seleccion-expediente?tipo=${tipo}&folio=${encodeForUrl(folio)}`);
       } else {
-        setErrorAmpliacion('No se encontro el expediente con ese folio');
+        // Expediente no encontrado
+        setError(response.mensaje || 'No se encontró el expediente con el folio ingresado');
       }
-    }, 1500);
+    } catch (error) {
+      console.error('[REGISTRO] Error al consultar expediente:', error);
+      setError('Error al buscar el expediente. Intenta de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const buscarAmpliacion = () => {
+    if (!isAmpliacionValid() || buscandoAmpliacion) return;
+    consultarExpediente(
+      folioAmpliacion.trim(),
+      'ampliacion',
+      setBuscandoAmpliacion,
+      setErrorAmpliacion
+    );
   };
 
   const buscarCoadyuvante = () => {
-    if (!isCoadyuvanteValid()) return;
-    setBuscandoCoadyuvante(true);
-    setErrorCoadyuvante(null);
-
-    setTimeout(() => {
-      setBuscandoCoadyuvante(false);
-      if (folioCoadyuvante.includes('INE-FOLIO')) {
-        navigate(`/registro-impugnacion?tipo=coadyuvante&expediente=${encodeURIComponent(folioCoadyuvante)}`);
-      } else {
-        setErrorCoadyuvante('No se encontro el expediente con ese folio');
-      }
-    }, 1500);
+    if (!isCoadyuvanteValid() || buscandoCoadyuvante) return;
+    consultarExpediente(
+      folioCoadyuvante.trim(),
+      'coadyuvante',
+      setBuscandoCoadyuvante,
+      setErrorCoadyuvante
+    );
   };
 
   const buscarAmicus = () => {
-    if (!isAmicusValid()) return;
-    setBuscandoAmicus(true);
-    setErrorAmicus(null);
-
-    setTimeout(() => {
-      setBuscandoAmicus(false);
-      if (folioAmicus.includes('INE-FOLIO')) {
-        navigate(`/registro-impugnacion?tipo=amicus&expediente=${encodeURIComponent(folioAmicus)}`);
-      } else {
-        setErrorAmicus('No se encontro el expediente con ese folio');
-      }
-    }, 1500);
+    if (!isAmicusValid() || buscandoAmicus) return;
+    consultarExpediente(
+      folioAmicus.trim(),
+      'amicus',
+      setBuscandoAmicus,
+      setErrorAmicus
+    );
   };
 
   return (
@@ -111,7 +149,7 @@ const RegistroPage = () => {
           {/* Nueva impugnacion */}
           <Link
             className="actores-card registro-option"
-            to="/registro-impugnacion"
+            to="/registro-impugnacion/actores"
             tabIndex={0}
             role="button"
             aria-label="Nueva impugnacion"

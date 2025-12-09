@@ -533,4 +533,232 @@
     border-color: rgba(167, 139, 205, 0.3) !important;
     border-top-color: #A78BCD !important;
   }
+
+  .otp-section {
+    .otp-header {
+      .back-button {
+        color: var(--dark-text-primary) !important;
+        border-color: var(--dark-border) !important;
+
+        &:hover {
+          background-color: rgba(155, 126, 196, 0.2) !important;
+          border-color: var(--dark-accent) !important;
+        }
+      }
+
+      .otp-title {
+        color: var(--dark-text-primary) !important;
+      }
+    }
+
+    .otp-text {
+      color: var(--dark-text-secondary) !important;
+    }
+
+    .otp-email {
+      color: var(--dark-accent) !important;
+    }
+
+    .otp-input {
+      background-color: var(--dark-bg-tertiary) !important;
+      color: var(--dark-text-primary) !important;
+      border-color: var(--dark-border) !important;
+
+      &:focus {
+        border-color: var(--dark-accent) !important;
+        box-shadow: 0 0 0 2px rgba(155, 126, 196, 0.3) !important;
+      }
+
+      &.error {
+        border-color: #ff6b6b !important;
+      }
+    }
+
+    .otp-loading {
+      color: var(--dark-text-primary) !important;
+    }
+
+    .otp-resend {
+      .otp-resend-text {
+        color: var(--dark-text-secondary) !important;
+      }
+
+      .resend-button {
+        color: var(--dark-accent) !important;
+
+        &:hover:not(:disabled) {
+          color: var(--dark-accent-hover) !important;
+        }
+
+        &.disabled {
+          color: var(--dark-text-muted) !important;
+        }
+      }
+    }
+  }
+}
+
+// OTP Section styles
+.otp-section {
+  padding: 1.5rem 0;
+  text-align: center;
+  animation: fadeInScale 0.4s ease-out;
+
+  .otp-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: transparent;
+      border: 1px solid #C0C0C0;
+      border-radius: 8px;
+      color: #333333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: rgba(91, 42, 115, 0.1);
+        border-color: #582E73;
+      }
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+
+    .otp-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333333;
+      margin: 0;
+      flex: 1;
+      text-align: left;
+    }
+  }
+
+  .otp-text {
+    font-size: 0.95rem;
+    color: #666666;
+    margin-bottom: 0.25rem;
+  }
+
+  .otp-email {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #582E73;
+    margin-bottom: 1.5rem;
+  }
+
+  .otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .otp-input {
+    width: 48px;
+    height: 56px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: 2px solid #C0C0C0;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: #333333;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #582E73;
+      box-shadow: 0 0 0 3px rgba(91, 42, 115, 0.15);
+    }
+
+    &.error {
+      border-color: #DC3545;
+      animation: shake 0.4s ease-in-out;
+    }
+
+    &:disabled {
+      background-color: #EBEBEB;
+      cursor: not-allowed;
+    }
+  }
+
+  .otp-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #582E73;
+    font-size: 0.95rem;
+    margin: 1rem 0;
+
+    .spinner {
+      width: 20px !important;
+      height: 20px !important;
+      border: 2.5px solid rgba(91, 42, 115, 0.2) !important;
+      border-top-color: #582E73 !important;
+    }
+  }
+
+  .otp-resend {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #E0E0E0;
+
+    .otp-resend-text {
+      font-size: 0.875rem;
+      color: #666666;
+      margin-bottom: 0.5rem;
+    }
+
+    .resend-button {
+      background: transparent;
+      border: none;
+      color: #582E73;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &:hover:not(:disabled) {
+        color: #6B3583;
+        text-decoration: underline;
+      }
+
+      &:disabled,
+      &.disabled {
+        color: #999999;
+        cursor: not-allowed;
+      }
+
+      .spinner-small {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(91, 42, 115, 0.2);
+        border-top-color: #582E73;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+    }
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
 }

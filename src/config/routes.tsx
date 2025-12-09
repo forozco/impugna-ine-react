@@ -107,14 +107,63 @@ export const router = createBrowserRouter([
         path: 'inicio',
         element: <Navigate to="/perfil" replace />
       },
-      // Registro de impugnacion
+      // Registro de impugnacion (con subrutas como en Angular)
       {
         path: 'registro-impugnacion',
-        element: (
-          <SuspenseWrapper>
-            <RegistroImpugnacionPage />
-          </SuspenseWrapper>
-        )
+        children: [
+          {
+            index: true,
+            element: <Navigate to="actores" replace />
+          },
+          {
+            path: 'actores',
+            element: (
+              <SuspenseWrapper>
+                <RegistroImpugnacionPage />
+              </SuspenseWrapper>
+            )
+          },
+          {
+            path: 'representante',
+            element: (
+              <SuspenseWrapper>
+                <RegistroImpugnacionPage />
+              </SuspenseWrapper>
+            )
+          },
+          {
+            path: 'personalidad',
+            element: (
+              <SuspenseWrapper>
+                <RegistroImpugnacionPage />
+              </SuspenseWrapper>
+            )
+          },
+          {
+            path: 'autoridad',
+            element: (
+              <SuspenseWrapper>
+                <RegistroImpugnacionPage />
+              </SuspenseWrapper>
+            )
+          },
+          {
+            path: 'impugnacion',
+            element: (
+              <SuspenseWrapper>
+                <RegistroImpugnacionPage />
+              </SuspenseWrapper>
+            )
+          },
+          {
+            path: 'evidencia',
+            element: (
+              <SuspenseWrapper>
+                <RegistroImpugnacionPage />
+              </SuspenseWrapper>
+            )
+          }
+        ]
       },
       {
         path: 'registro',
@@ -187,14 +236,39 @@ export const router = createBrowserRouter([
           </SuspenseWrapper>
         )
       },
-      // Amicus Curiae
+      // Amicus Curiae (con subrutas como en Angular)
       {
         path: 'amicus-curiae',
-        element: (
-          <SuspenseWrapper>
-            <AmicusCuriaePage />
-          </SuspenseWrapper>
-        )
+        children: [
+          {
+            index: true,
+            element: <Navigate to="datos" replace />
+          },
+          {
+            path: 'datos',
+            element: (
+              <SuspenseWrapper>
+                <AmicusCuriaePage />
+              </SuspenseWrapper>
+            )
+          },
+          {
+            path: 'experiencia',
+            element: (
+              <SuspenseWrapper>
+                <AmicusCuriaePage />
+              </SuspenseWrapper>
+            )
+          },
+          {
+            path: 'escrito',
+            element: (
+              <SuspenseWrapper>
+                <AmicusCuriaePage />
+              </SuspenseWrapper>
+            )
+          }
+        ]
       },
       // Not found - catch all
       {

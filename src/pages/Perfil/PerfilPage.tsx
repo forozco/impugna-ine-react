@@ -5,74 +5,83 @@
 
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '../../stores/authStore';
+import { usuariosService, type UsuarioPerfil } from '../../services/api';
 import './PerfilPage.scss';
-
-interface Usuario {
-  nombrePersona: string;
-  apellidoPaternoPersona: string;
-  apellidoMaternoPersona: string;
-  genero: string;
-  calle?: string;
-  numeroExterior?: string;
-  numeroInterior?: string;
-  codigoPostal?: string;
-  colonia?: string;
-  municipioGeo?: string;
-  ciudad?: string;
-  estadoGeo?: string;
-}
 
 const PerfilPage = () => {
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const [usuario, setUsuario] = useState<UsuarioPerfil | null>(null);
+  const [usuarioConDomicilio, setUsuarioConDomicilio] = useState(false);
 
   useEffect(() => {
-    // Simulacion de carga de datos
-    const loadUserData = async () => {
+    const cargarPerfil = async () => {
+      // Obtener usuarioId del user del store
+      const usuarioId = user?.id;
+
+      if (!usuarioId) {
+        setError('No se encontró el ID de usuario en la sesión');
+        setLoading(false);
+        console.error('[PERFIL] No hay usuarioId en el store');
+        return;
+      }
+
+      const usuarioIdNum = parseInt(usuarioId, 10);
+
+      if (isNaN(usuarioIdNum)) {
+        setError('ID de usuario inválido');
+        setLoading(false);
+        console.error('[PERFIL] usuarioId inválido:', usuarioId);
+        return;
+      }
+
+      console.log('[PERFIL] Cargando perfil para usuario:', usuarioIdNum);
       setLoading(true);
       setError(null);
 
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        const response = await usuariosService.getPerfil(usuarioIdNum);
 
-        // Datos simulados
-        setUsuario({
-          nombrePersona: user?.nombre || 'Usuario',
-          apellidoPaternoPersona: 'Apellido Paterno',
-          apellidoMaternoPersona: 'Apellido Materno',
-          genero: 'M',
-          calle: 'Calle Ejemplo',
-          numeroExterior: '123',
-          numeroInterior: 'A',
-          codigoPostal: '06600',
-          colonia: 'Juarez',
-          municipioGeo: 'Cuauhtemoc',
-          ciudad: 'Ciudad de Mexico',
-          estadoGeo: 'CDMX'
-        });
+        console.log('[PERFIL] Respuesta del backend:', response);
+
+        if (response.success) {
+          setUsuario(response.data);
+          setUsuarioConDomicilio(response.usuarioConDomicilio);
+          console.log('[PERFIL] usuarioConDomicilio:', response.usuarioConDomicilio);
+        } else {
+          setError(response.mensaje || 'Error al cargar el perfil');
+        }
       } catch (err) {
-        setError('Error al cargar los datos del perfil');
+        console.error('[PERFIL] Error al cargar perfil:', err);
+        setError('Error al cargar los datos del usuario');
       } finally {
         setLoading(false);
       }
     };
 
-    loadUserData();
+    cargarPerfil();
   }, [user]);
 
-  const generoTexto = usuario?.genero === 'M' ? 'Masculino' : usuario?.genero === 'F' ? 'Femenino' : '-';
+  // Helper para formatear el género
+  const generoTexto = (() => {
+    const genero = usuario?.generoPersona;
+    if (!genero) return '-';
+    return genero === 'M' ? 'Masculino' : genero === 'F' ? 'Femenino' : 'Otro';
+  })();
 
-  const direccionCompleta = [
-    usuario?.calle,
-    usuario?.numeroExterior ? `#${usuario.numeroExterior}` : null,
-    usuario?.numeroInterior ? `Int. ${usuario.numeroInterior}` : null
-  ].filter(Boolean).join(' ') || '-';
+  // Helper para mostrar la dirección completa
+  const direccionCompleta = (() => {
+    if (!usuario) return '-';
 
-  const usuarioConDomicilio = Boolean(
-    usuario?.calle || usuario?.codigoPostal || usuario?.colonia
-  );
+    const partes = [
+      usuario.callePersona,
+      usuario.numExtPersona ? `#${usuario.numExtPersona}` : null,
+      usuario.numIntPersona ? `Int. ${usuario.numIntPersona}` : null
+    ].filter(Boolean);
+
+    return partes.length > 0 ? partes.join(' ') : '-';
+  })();
 
   return (
     <section className="wizard-container">
