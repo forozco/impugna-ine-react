@@ -1,0 +1,192 @@
+// Button Styles - INE Design System
+// Primary, Secondary, and User button variants
+
+.btn-primario {
+  background: #D5007F;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 12px 24px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  &:active:not(:disabled) {
+    background: #F2B0D7 !important;
+    color: #000000 !important;
+    border: 1px solid #AA0066 !important;
+    font-weight: 500;
+  }
+
+  &:hover:not(:disabled) {
+    background: #C00072;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid #409AA1;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background: #E0E0E0;
+    color: #333333;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Dark mode styles for primary button
+.dark-mode .btn-primario {
+  background: #9b7ec4;
+  color: #ffffff;
+
+  &:hover:not(:disabled) {
+    background: #b89dd8;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  &:active:not(:disabled) {
+    background: #7C3AAD !important;
+    color: #ffffff !important;
+    border: 1px solid #9b7ec4 !important;
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid #b89dd8;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background: #3d3a4a;
+    color: #8b8899;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.btn-secundario {
+  background: #FBE6F2;
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 24px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  &:active:not(:disabled) {
+    background: #F2B0D7 !important;
+    color: #000000 !important;
+    border: 1px solid #AA0066 !important;
+  }
+
+  &:hover:not(:disabled) {
+    background: #F9D9EC;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid #409AA1;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background: #E0E0E0;
+    color: #333333;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Dark mode styles for secondary button
+.dark-mode .btn-secundario {
+  background: var(--dark-bg-tertiary, #2f2d3d);
+  color: var(--dark-text-primary, #e8e6f0);
+  border-color: var(--dark-border-light, #4a4760);
+
+  &:hover:not(:disabled) {
+    background: var(--dark-hover, #353345);
+    border-color: var(--dark-accent, #9b7ec4);
+    color: var(--dark-accent, #9b7ec4);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(155, 126, 196, 0.2);
+  }
+}
+
+.btn-usuario {
+  background: #582E73;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  i {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+  }
+
+  &:active:not(:disabled) {
+    background: #CBBED4 !important;
+    color: #000000 !important;
+    border: 1px solid #582E73 !important;
+  }
+
+  &:hover:not(:disabled) {
+    background: #4F2968;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid #409AA1;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background: #E0E0E0;
+    color: #333333;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Utility class
+.w-100 {
+  width: 100%;
+}
+
+// Loader inline
+.loader-inline {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.75rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+.spinner {
+  display: inline-block !important;
+  width: 18px !important;
+  height: 18px !important;
+  border: 2.5px solid rgba(255, 255, 255, 0.3) !important;
+  border-top-color: #FFFFFF !important;
+  border-radius: 50% !important;
+  animation: spin 0.7s linear infinite !important;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

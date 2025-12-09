@@ -1,0 +1,120 @@
+// Footer Styles - INE Design System
+
+.footer {
+  background-color: #351C45;
+  color: #FFFFFF;
+  padding: 12px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+
+  // Fix for iOS and Android
+  @media (max-width: 768px) {
+    // iOS: Use env() for safe-area
+    @supports (-webkit-touch-callout: none) {
+      position: fixed;
+      bottom: env(safe-area-inset-bottom, 0);
+      bottom: 0;
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+      will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      isolation: isolate;
+      contain: layout style paint;
+    }
+
+    // Android and others (non-iOS)
+    @supports not (-webkit-touch-callout: none) {
+      bottom: 0;
+      position: fixed;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+  }
+
+  .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 3rem;
+  }
+
+  img {
+    height: 18px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 0.75rem;
+    background-color: #2E1A3D;
+    position: relative;
+    bottom: auto;
+
+    .footer-content {
+      flex-direction: column;
+      text-align: center;
+      padding: 0;
+      gap: 0.35rem;
+      align-items: center;
+
+      // Add INE logo before content
+      &::before {
+        content: '';
+        display: block;
+        width: 55px;
+        height: 24px;
+        background-image: url('/assets/imgs/logos/logo-INE-blanco.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        order: -1;
+      }
+    }
+
+    p {
+      font-size: 0.55rem;
+      color: #FFFFFF;
+      font-weight: 400;
+      letter-spacing: 0.1px;
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .text-end {
+      text-align: center !important;
+      margin-top: 0;
+    }
+  }
+}
+
+// Dark mode
+.dark-mode .footer {
+  background-color: var(--dark-bg-tertiary, #2f2d3d) !important;
+  color: var(--dark-text-primary, #e8e6f0) !important;
+  border-top-color: var(--dark-border, #3d3a4f);
+}
+
+// Helper classes
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.font-12-regular {
+  font-size: 0.75rem;
+  font-weight: 400;
+}

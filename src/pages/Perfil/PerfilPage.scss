@@ -1,0 +1,315 @@
+/**
+ * Estilos de PerfilPage
+ * Migrado de Angular: perfil.scss
+ */
+
+.wizard-container {
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+  background-color: #f5f5f5;
+
+  .main-perfil {
+    max-width: 1318px;
+    margin: 0 auto 6rem;
+    padding: 3rem 2.5rem;
+    background: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+    border-radius: 8px;
+
+    h4 {
+      color: #2D2D2D;
+      font-weight: 600;
+    }
+
+    .seccion {
+      margin-bottom: 2.5rem;
+
+      h6 {
+        color: #5B2A73;
+        font-weight: 600;
+      }
+
+      // Vista Desktop - Visible por defecto
+      .desktop-view {
+        display: block;
+      }
+
+      // Vista Mobile - Oculta por defecto
+      .mobile-view {
+        display: none;
+      }
+
+      .card-perfil {
+        background-color: #EBEBEB;
+        border: 0;
+        border-radius: 8px;
+
+        .font-16-medium {
+          font-size: 1rem;
+          font-weight: 500;
+          color: #5B2A73;
+          margin-bottom: 0.25rem;
+        }
+
+        .text {
+          color: #575453;
+          font-size: 0.9375rem;
+        }
+      }
+    }
+
+    .acciones {
+      display: flex;
+      justify-content: center;
+
+      .primary-button {
+        background-color: #C9368E;
+        color: #FFFFFF;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.875rem 3rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Roboto', sans-serif;
+        box-shadow: 0 2px 8px rgba(201, 54, 142, 0.3);
+
+        &:hover {
+          background-color: #D44A9E;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(201, 54, 142, 0.4);
+        }
+
+        &:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 4px rgba(201, 54, 142, 0.3);
+        }
+
+        &:focus-visible {
+          outline: 3px solid #5B2A73;
+          outline-offset: 3px;
+        }
+      }
+    }
+  }
+
+  // ===========================================
+  // TABLET - Mantener vista desktop
+  // ===========================================
+  @media (max-width: 768px) {
+    padding: 1.5rem 0;
+
+    .main-perfil {
+      padding: 2rem 1.25rem;
+      margin: 0 0.75rem 3rem;
+    }
+  }
+
+  // ===========================================
+  // MOBILE - Cambiar a tarjetas individuales
+  // ===========================================
+  @media (max-width: 480px) {
+    padding: 0.75rem 0;
+
+    .main-perfil {
+      padding: 1.25rem 0.875rem;
+      margin: 0 0.5rem 1.5rem;
+      border-radius: 12px;
+
+      h4 {
+        font-size: 1.125rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .seccion {
+        margin-bottom: 1.5rem;
+
+        h6 {
+          font-size: 1rem;
+          margin-bottom: 0.875rem;
+        }
+
+        // Ocultar vista desktop
+        .desktop-view {
+          display: none !important;
+        }
+
+        // Mostrar vista mobile
+        .mobile-view {
+          display: grid !important;
+        }
+
+        .info-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0.75rem;
+
+          .info-item {
+            background-color: #EBEBEB;
+            padding: 0.875rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+
+            &.full-width {
+              grid-column: 1 / -1;
+            }
+
+            .info-label {
+              display: block;
+              font-size: 0.6875rem;
+              font-weight: 600;
+              color: #5B2A73;
+              margin-bottom: 0.375rem;
+              text-transform: uppercase;
+              letter-spacing: 0.3px;
+            }
+
+            .info-value {
+              font-size: 0.9375rem;
+              font-weight: 500;
+              color: #2D2D2D;
+              line-height: 1.4;
+              word-wrap: break-word;
+            }
+          }
+        }
+      }
+
+      .acciones {
+        margin-top: 1.5rem;
+
+        .primary-button {
+          width: 100%;
+          padding: 0.875rem 1.5rem;
+          font-size: 0.9375rem;
+        }
+      }
+    }
+  }
+}
+
+// Spacing utilities
+.space-mb-0400 {
+  margin-bottom: 1rem;
+}
+
+.space-px-0400 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.space-py-0500 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.space-mb-0500 {
+  margin-bottom: 1.25rem;
+}
+
+.space-py-0500 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.space-mt-0300 {
+  margin-top: 0.75rem;
+}
+
+// Dark mode styles (React uses class instead of :host-context)
+.dark-mode {
+  .wizard-container {
+    background-color: var(--dark-bg-primary) !important;
+
+    .main-perfil {
+      background: var(--dark-bg-secondary) !important;
+      box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.6) !important;
+      border: 1px solid rgba(155, 126, 196, 0.2);
+
+      h1, h2, h3, h4, h5, h6 {
+        color: var(--dark-text-primary) !important;
+      }
+
+      p, span, div {
+        color: var(--dark-text-secondary) !important;
+      }
+
+      .seccion {
+        h6 {
+          color: var(--dark-accent) !important;
+        }
+
+        // Estilos para vista Desktop
+        .card-perfil {
+          background-color: var(--dark-bg-tertiary) !important;
+          border-color: var(--dark-border) !important;
+
+          .font-16-medium {
+            color: var(--dark-text-primary) !important;
+            font-weight: 600 !important;
+          }
+
+          .text {
+            color: var(--dark-text-secondary) !important;
+          }
+
+          &:hover {
+            background-color: var(--dark-bg-tertiary) !important;
+            border-color: var(--dark-border) !important;
+            box-shadow: none !important;
+            transform: none !important;
+            cursor: default !important;
+          }
+        }
+
+        // Estilos para vista Mobile
+        .info-grid {
+          .info-item {
+            background-color: var(--dark-bg-tertiary) !important;
+            border: 1px solid rgba(155, 126, 196, 0.15);
+
+            .info-label {
+              color: var(--dark-accent) !important;
+            }
+
+            .info-value {
+              color: var(--dark-text-secondary) !important;
+            }
+          }
+        }
+      }
+
+      .acciones {
+        .primary-button {
+          background-color: var(--dark-accent) !important;
+          color: #FFFFFF !important;
+          box-shadow: 0 2px 8px rgba(155, 126, 196, 0.3);
+
+          &:hover {
+            background-color: var(--dark-accent-hover) !important;
+            box-shadow: 0 4px 12px rgba(155, 126, 196, 0.4);
+          }
+
+          &:active {
+            box-shadow: 0 2px 4px rgba(155, 126, 196, 0.3);
+          }
+
+          &:focus-visible {
+            outline-color: #FFFFFF !important;
+          }
+        }
+      }
+
+      .spinner-border {
+        color: var(--dark-accent) !important;
+      }
+
+      .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+        border-color: rgba(220, 53, 69, 0.3) !important;
+        color: #ff6b6b !important;
+      }
+    }
+  }
+}

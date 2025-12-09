@@ -1,0 +1,974 @@
+/**
+ * Estilos de ConsultaImpugnacionPage
+ * Migrado de Angular: consulta-impugnacion.scss
+ */
+
+.consulta-container {
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+  background: #FFFFFF;
+}
+
+.consulta-content {
+  max-width: 1318px;
+  margin: 0 auto;
+  margin-bottom: 6rem;
+  padding: 3rem 2.5rem;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+}
+
+.main-title {
+  font: normal normal bold 38px/44px Roboto;
+  letter-spacing: 0px;
+  color: #000000;
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.dato-obligatorio {
+  font: normal normal normal 16px/52px Roboto;
+  letter-spacing: 0px;
+  text-align: left;
+  margin-bottom: 2rem;
+
+  .text-danger {
+    color: #DC3545 !important;
+  }
+}
+
+.subtitle {
+  font: normal normal bold 21px/25px Roboto;
+  letter-spacing: 0px;
+  color: #000000;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.consulta-box {
+  background: #E8E8E8;
+  border-radius: 8px;
+  padding: 3rem 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.folio-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #C42C7A;
+  margin-bottom: 1.5rem;
+  text-align: center;
+
+  .text-danger {
+    color: #DC3545 !important;
+  }
+}
+
+.folio-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.input-button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.folio-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font: normal normal normal 16px/19px Roboto;
+  letter-spacing: 0px;
+  border: 1px solid #CED4DA;
+  border-radius: 6px;
+  background: #FFFFFF;
+
+  &:focus {
+    outline: none;
+    border-color: #C42C7A;
+  }
+
+  &::placeholder {
+    color: #6C757D;
+  }
+}
+
+.btn-buscar {
+  padding: 0.75rem 3rem;
+  background: #C42C7A;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: #A02465;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(196, 44, 122, 0.3);
+  }
+
+  &:disabled {
+    background: #CED4DA;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.folio-status {
+  display: flex;
+  justify-content: center;
+}
+
+.status-badge {
+  background: #C8F7DC;
+  color: #000000;
+  padding: 0.5rem 2rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.status-badge-error {
+  background: #FFCDD2;
+  color: #B71C1C;
+}
+
+.folio-error {
+  .status-badge-error {
+    background: #FFCDD2;
+    color: #B71C1C;
+  }
+}
+
+// Celda de Acto impugnado con truncado
+.acto-impugnado-cell {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resultado-section {
+  margin-top: 2.5rem;
+}
+
+.resultado-header {
+  background: #351C45;
+  padding: 1rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid #D5007F;
+  border-bottom: 2px solid #D5007F;
+}
+
+.resultado-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+
+  .text-danger {
+    color: #FF6B6B;
+  }
+}
+
+.table-wrapper {
+  position: relative;
+}
+
+.resultado-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #FFFFFF;
+  border: 1px solid #D5007F;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+
+  tbody td:first-child {
+    white-space: nowrap;
+  }
+
+  thead {
+    background: #351C45;
+    color: #FFFFFF;
+    border-bottom: 2px solid #D5007F;
+
+    th {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: visible;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      background: #FFFFFF;
+
+      td {
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+        color: #000000;
+        border-right: 1px solid #DEE2E6;
+        border-bottom: 1px solid #DEE2E6;
+        vertical-align: middle;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+
+      &:last-child {
+        td {
+          border-bottom: none;
+
+          &:first-child {
+            border-bottom-left-radius: 8px;
+          }
+
+          &:last-child {
+            border-bottom-right-radius: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  thead th.status-header {
+    position: relative;
+  }
+}
+
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-left: 0.5rem;
+  z-index: 100000;
+
+  &:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.tooltip-wrapper-mobile {
+  display: none;
+}
+
+.btn-tooltip {
+  background: #D5007F;
+  border: none;
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+  line-height: 1;
+
+  &:hover {
+    background: #A02465;
+    transform: scale(1.1);
+  }
+}
+
+.tooltip-content {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: -10px;
+  background: #000000;
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+  min-width: 340px;
+  max-width: 360px;
+  text-align: left;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .tooltip-item {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+}
+
+// Mini badges dentro del tooltip
+.tooltip-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.badge-tramite {
+  background: #BAECD1;
+  color: #000000;
+}
+
+.badge-registrado {
+  background: #409AA1;
+  color: #FFFFFF;
+}
+
+.badge-en-tramite {
+  background: #FDEEB0;
+  color: #000000;
+}
+
+.badge-publicado {
+  background: #AA0066;
+  color: #FFFFFF;
+}
+
+.badge-retirado {
+  background: #E5B7B0;
+  color: #000000;
+}
+
+.btn-close-tooltip {
+  display: none;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: #6C757D;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #C42C7A;
+  }
+
+  i {
+    display: block;
+  }
+}
+
+// Badges de estatus con colores especificos
+.status-tramite,
+.status-registrado,
+.status-en_tramite,
+.status-publicado,
+.status-retirado {
+  padding: 0.375rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+  min-width: 100px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.status-tramite {
+  background: #BAECD1;
+  color: #000000;
+}
+
+.status-registrado {
+  background: #409AA1;
+  color: #FFFFFF;
+}
+
+.status-en_tramite {
+  background: #FDEEB0;
+  color: #000000;
+}
+
+.status-publicado {
+  background: #AA0066;
+  color: #FFFFFF;
+}
+
+.status-retirado {
+  background: #E5B7B0;
+  color: #000000;
+}
+
+.info-text {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #DEE2E6;
+
+  p {
+    font-size: 0.95rem;
+    color: #666666;
+    margin: 0;
+  }
+
+  .link-ayuda {
+    color: #C42C7A;
+    text-decoration: underline;
+    font-weight: 500;
+
+    &:hover {
+      color: #A02361;
+    }
+  }
+}
+
+// Mobile styles
+@media (max-width: 768px) {
+  .consulta-container {
+    padding: 1rem 0;
+  }
+
+  .consulta-content {
+    padding: 1.5rem 1rem;
+    margin: 0 0.5rem 2rem;
+  }
+
+  .main-title {
+    font-size: 1.5rem;
+    line-height: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    line-height: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .consulta-box {
+    padding: 1.5rem 1rem;
+  }
+
+  .folio-label {
+    font-size: 0.9rem;
+    text-align: left;
+    margin-bottom: 0.75rem;
+  }
+
+  .input-button-group {
+    flex-direction: column;
+    max-width: 100%;
+    gap: 0.75rem;
+  }
+
+  .folio-input {
+    width: 100%;
+    font-size: 16px;
+    padding: 0.75rem 1rem;
+  }
+
+  .btn-buscar {
+    width: 100%;
+    padding: 0.875rem 2rem;
+  }
+
+  .status-badge {
+    font-size: 0.85rem;
+    padding: 0.4rem 1.5rem;
+  }
+
+  .resultado-section {
+    margin-top: 2rem;
+  }
+
+  .resultado-header {
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #D5007F;
+    margin-bottom: 1rem;
+  }
+
+  .resultado-title {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  // Convertir tabla a cards en mobile
+  .resultado-table {
+    display: block;
+    border: none;
+    border-radius: 0;
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      display: block;
+
+      tr {
+        display: block;
+        margin-bottom: 1.25rem;
+        border: 1px solid #D5007F;
+        border-radius: 12px;
+        padding: 1.25rem;
+        background: white;
+        box-shadow: 0 2px 8px rgba(213, 0, 127, 0.12);
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &:hover {
+          background: white;
+          border: 1px solid #D5007F;
+          transform: none;
+        }
+      }
+
+      td {
+        display: block;
+        text-align: left;
+        padding: 0.75rem 0;
+        border: none !important;
+
+        &::before {
+          content: attr(data-label);
+          font-weight: 700;
+          color: #582E73;
+          display: block;
+          margin-bottom: 0.5rem;
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          letter-spacing: 0.8px;
+        }
+
+        &:not(:last-child) {
+          margin-bottom: 0;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid rgba(213, 0, 127, 0.2) !important;
+        }
+
+        &:last-child {
+          padding-bottom: 0;
+          position: relative;
+
+          &::before {
+            display: inline-block;
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+
+  // Ocultar tooltip del header en mobile
+  .tooltip-wrapper {
+    display: none !important;
+  }
+
+  // Mostrar tooltip en la celda de estatus en mobile
+  .tooltip-wrapper-mobile {
+    display: inline-block !important;
+    position: relative;
+    vertical-align: middle;
+  }
+
+  .status-cell {
+    display: block;
+
+    &::before {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  // Todos los badges de estatus en mobile
+  .status-tramite,
+  .status-registrado,
+  .status-en_tramite,
+  .status-publicado,
+  .status-retirado {
+    font-size: 0.875rem;
+    padding: 0.375rem 1rem;
+    display: inline-block;
+    margin-right: 0.75rem;
+    vertical-align: middle;
+    min-width: 100px;
+    text-align: center;
+  }
+
+  .btn-tooltip {
+    pointer-events: auto !important;
+    background: #D5007F !important;
+    color: #FFFFFF !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+
+    &:hover {
+      background: #A02465 !important;
+    }
+  }
+
+  .tooltip-content {
+    display: none;
+  }
+
+  .tooltip-content-mobile {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    max-width: 90%;
+    width: 340px;
+    padding: 2rem 1rem 1rem;
+    background: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: left;
+
+    .tooltip-item-mobile {
+      margin: 0.75rem 0;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .btn-close-tooltip {
+    display: block;
+  }
+
+  .info-text {
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+
+    p {
+      font-size: 0.875rem;
+      line-height: 1.5;
+
+      br {
+        display: none;
+      }
+    }
+  }
+}
+
+// Dark mode styles (React uses class instead of :host-context)
+.dark-mode {
+  .consulta-container {
+    background: var(--dark-bg-primary) !important;
+  }
+
+  .consulta-content {
+    background: var(--dark-bg-secondary) !important;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid var(--dark-border);
+  }
+
+  .main-title {
+    color: var(--dark-text-primary) !important;
+  }
+
+  .dato-obligatorio {
+    color: var(--dark-text-secondary) !important;
+
+    .text-danger {
+      color: #ff6b6b !important;
+    }
+  }
+
+  .subtitle {
+    color: var(--dark-text-primary) !important;
+  }
+
+  .consulta-box {
+    background: var(--dark-bg-tertiary) !important;
+    border: 1px solid var(--dark-border);
+  }
+
+  .folio-label {
+    color: var(--dark-accent) !important;
+
+    .text-danger {
+      color: #ff6b6b !important;
+    }
+  }
+
+  .folio-input {
+    background-color: var(--dark-bg-secondary) !important;
+    color: var(--dark-text-primary) !important;
+    border-color: var(--dark-border) !important;
+
+    &:focus {
+      border-color: var(--dark-accent) !important;
+      box-shadow: 0 0 0 3px rgba(155, 126, 196, 0.15) !important;
+    }
+
+    &::placeholder {
+      color: var(--dark-text-muted) !important;
+    }
+  }
+
+  .btn-buscar {
+    background: var(--dark-accent) !important;
+    color: var(--dark-text-primary) !important;
+
+    &:hover:not(:disabled) {
+      background: #7d63a0 !important;
+      box-shadow: 0 4px 8px rgba(155, 126, 196, 0.4) !important;
+    }
+
+    &:disabled {
+      background: var(--dark-border) !important;
+      color: rgba(232, 230, 240, 0.4) !important;
+    }
+  }
+
+  .btn-tooltip {
+    background: var(--dark-accent) !important;
+    color: #FFFFFF !important;
+
+    &:hover {
+      background: #7d63a0 !important;
+    }
+  }
+
+  .tooltip-content {
+    background: var(--dark-bg-tertiary) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8) !important;
+
+    .tooltip-item {
+      color: var(--dark-text-primary) !important;
+    }
+  }
+
+  .btn-close-tooltip {
+    color: var(--dark-text-secondary) !important;
+
+    &:hover {
+      color: var(--dark-accent) !important;
+    }
+  }
+
+  .status-badge {
+    background: rgba(155, 126, 196, 0.2) !important;
+    color: var(--dark-accent) !important;
+  }
+
+  .status-badge-error {
+    background: rgba(183, 28, 28, 0.3) !important;
+    color: #EF9A9A !important;
+  }
+
+  .resultado-header {
+    background: var(--dark-bg-tertiary) !important;
+    border-color: var(--dark-accent) !important;
+  }
+
+  .resultado-title {
+    color: var(--dark-text-primary) !important;
+  }
+
+  .resultado-table {
+    background: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-accent) !important;
+
+    thead {
+      background: var(--dark-bg-tertiary) !important;
+      border-bottom-color: var(--dark-accent) !important;
+
+      th {
+        color: var(--dark-text-primary) !important;
+        border-right-color: rgba(155, 126, 196, 0.15) !important;
+      }
+    }
+
+    tbody {
+      tr {
+        background: var(--dark-bg-secondary) !important;
+
+        td {
+          color: var(--dark-text-primary) !important;
+          border-color: var(--dark-border) !important;
+        }
+      }
+    }
+  }
+
+  // Ajustar colores de los badges en dark mode para mejor legibilidad
+  .status-tramite {
+    background: #5DBF8E !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+
+  .status-registrado {
+    background: #5BC5CD !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+
+  .status-en_tramite {
+    background: #F5DB6B !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+
+  .status-publicado {
+    background: #D64494 !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+  }
+
+  .status-retirado {
+    background: #D88C80 !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+
+  // Aplicar los mismos colores brillantes a los badges del tooltip
+  .tooltip-badge.badge-tramite {
+    background: #5DBF8E !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+
+  .tooltip-badge.badge-registrado {
+    background: #5BC5CD !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+
+  .tooltip-badge.badge-en-tramite {
+    background: #F5DB6B !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+
+  .tooltip-badge.badge-publicado {
+    background: #D64494 !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+  }
+
+  .tooltip-badge.badge-retirado {
+    background: #D88C80 !important;
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
+
+  .info-text {
+    border-top-color: var(--dark-border) !important;
+
+    p {
+      color: var(--dark-text-secondary) !important;
+    }
+
+    .link-ayuda {
+      color: var(--dark-accent) !important;
+
+      &:hover {
+        color: var(--dark-accent-hover) !important;
+      }
+    }
+  }
+
+  .tooltip-content-mobile {
+    background: var(--dark-bg-tertiary) !important;
+    border-color: var(--dark-border) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8) !important;
+
+    .tooltip-item-mobile {
+      color: var(--dark-text-primary) !important;
+    }
+  }
+
+  // Mobile dark mode
+  @media (max-width: 768px) {
+    .resultado-header {
+      border-color: var(--dark-accent) !important;
+      background: var(--dark-bg-tertiary) !important;
+    }
+
+    .resultado-table {
+      tbody {
+        tr {
+          background: var(--dark-bg-tertiary) !important;
+          border: 1px solid var(--dark-accent) !important;
+          box-shadow: 0 2px 8px rgba(155, 126, 196, 0.25) !important;
+
+          &:hover {
+            background: var(--dark-bg-tertiary) !important;
+            border: 1px solid var(--dark-accent) !important;
+            transform: none !important;
+          }
+        }
+
+        td {
+          &::before {
+            color: var(--dark-accent) !important;
+          }
+
+          &:not(:last-child) {
+            border-bottom-color: rgba(155, 126, 196, 0.2) !important;
+          }
+        }
+      }
+    }
+  }
+}

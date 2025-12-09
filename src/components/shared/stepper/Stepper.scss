@@ -1,0 +1,507 @@
+/**
+ * Estilos del Stepper - Igual que Angular
+ */
+
+// Variables
+$step-purple: #582E73;
+$step-done: #582E73;
+$step-muted: #e2e2e7;
+$step-disabled: #d6d6d6;
+$secundario-normal: #582E73;
+
+// Wrapper del stepper
+.stepper-wrapper {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+
+  @media (max-width: 768px) {
+    overflow-x: clip;
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Stepper horizontal
+.stepper {
+  padding: 28px 16px 46px;
+  max-width: 900px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 40px 8px 20px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  // Grupo 1 (pasos 4-6): ajustar rail
+  @media (max-width: 768px) {
+    &[data-step-group="1"] .rail {
+      left: -50px;
+      right: 68px;
+    }
+  }
+}
+
+// Rail (línea de progreso)
+.rail {
+  position: absolute;
+  left: 8.33%;
+  right: 8.33%;
+  top: 43px;
+  height: 4px;
+  border-radius: 999px;
+  background: $step-muted;
+
+  @media (max-width: 768px) {
+    top: 59px;
+    left: calc(8px + 20px);
+    right: -8px;
+  }
+
+  // Grupo 0 en mobile
+  @media (max-width: 768px) {
+    .stepper[data-step-group="0"] & {
+      left: 68px;
+      right: -50px;
+    }
+  }
+
+  // Steppers con 3 pasos o menos
+  @media (max-width: 768px) {
+    .stepper:not(:has(.steps .step:nth-child(4))) & {
+      right: 68px !important;
+    }
+  }
+
+  &.rail--progress {
+    background: $step-purple;
+    width: 0px;
+    right: auto;
+    z-index: 1;
+    transition: width 0.3s ease-in-out;
+  }
+}
+
+// Steps container
+.steps {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// Step individual
+.step {
+  text-align: center;
+
+  .dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: #fff;
+    border: 3px solid $step-muted;
+    display: grid;
+    place-items: center;
+    transition: 0.2s border-color, 0.2s box-shadow, 0.2s background;
+    position: relative;
+    margin-inline: auto;
+    cursor: pointer;
+
+    .inner {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: $step-muted;
+    }
+
+    .check {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      color: #fff;
+      opacity: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .space-my-0300 {
+    height: 0.75rem;
+  }
+
+  .caption {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 21px;
+    letter-spacing: 0px;
+    color: #000000;
+    text-align: center;
+    opacity: 1;
+    margin-top: 8px;
+  }
+
+  // Estado: Done (completado)
+  &.step--done {
+    .dot {
+      border-color: $step-done;
+      background: $step-done;
+      box-shadow: none;
+
+      .inner {
+        background: transparent;
+      }
+
+      .check {
+        opacity: 1;
+      }
+    }
+
+    .caption {
+      font-weight: 500;
+      color: #000000;
+    }
+  }
+
+  // Estado: Current (actual)
+  &.step--current {
+    .dot {
+      border-color: $secundario-normal;
+      background: $secundario-normal;
+      box-shadow: 0 0 0 8px rgba(88, 46, 115, 0.2);
+      border-width: 3px;
+
+      .inner {
+        background: #fff;
+        width: 12px;
+        height: 12px;
+      }
+
+      .check {
+        opacity: 0;
+      }
+    }
+
+    .caption {
+      font-weight: 700;
+      color: #000000;
+    }
+  }
+
+  // Estado: Disabled (futuro)
+  &.step--disabled {
+    .dot {
+      border-color: $step-disabled;
+      background: #fff;
+      cursor: not-allowed;
+
+      .inner {
+        background: $step-disabled;
+      }
+    }
+
+    .caption {
+      font-weight: 400;
+      color: #000000;
+    }
+  }
+}
+
+// Título del paso actual
+.stepper-title-container {
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    margin-top: 4px;
+  }
+}
+
+.step-title-box {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: -30px;
+
+  &.bg-secundario {
+    background-color: $secundario-normal !important;
+  }
+
+  @media (max-width: 768px) {
+    max-height: 200px;
+    overflow: hidden;
+    opacity: 1;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-bottom 0.5s ease-out;
+
+    &.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-bottom: 0;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+}
+
+.step-title {
+  font-size: 1.1rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+// Barra de progreso opcional
+.stepper-progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    background: $step-muted;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: $step-purple;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+    white-space: nowrap;
+  }
+}
+
+// Responsive para mobile
+@media (max-width: 768px) {
+  .steps {
+    overflow: visible;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-height: 100px;
+  }
+
+  // Por defecto, todos los pasos están ocultos
+  .step {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 33.33%;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  // Grupo 0: Mostrar solo pasos 1, 2, 3
+  .steps[data-step-group="0"] .step:nth-child(1),
+  .steps[data-step-group="0"] .step:nth-child(2),
+  .steps[data-step-group="0"] .step:nth-child(3) {
+    display: flex;
+    opacity: 1;
+  }
+
+  // Grupo 1: Mostrar solo pasos 4, 5, 6
+  .steps[data-step-group="1"] .step:nth-child(4),
+  .steps[data-step-group="1"] .step:nth-child(5),
+  .steps[data-step-group="1"] .step:nth-child(6) {
+    display: flex;
+    opacity: 1;
+  }
+
+  // Dot más grande en mobile
+  .step .dot {
+    flex-shrink: 0;
+    width: 40px !important;
+    height: 40px !important;
+
+    .inner {
+      width: 12px !important;
+      height: 12px !important;
+    }
+
+    .check {
+      width: 24px !important;
+      height: 24px !important;
+    }
+  }
+
+  // Círculo interno del paso actual
+  .step.step--current .dot .inner {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  // Eliminar el espaciador en mobile
+  .step .space-my-0300 {
+    display: none !important;
+  }
+
+  // Ajustar margen del caption
+  .step .caption {
+    margin-top: 12px !important;
+    line-height: 16px;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .step .caption {
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  .step.step--done .caption {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+  }
+
+  .step.step--current .caption {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 700;
+  }
+
+  .step.step--disabled .caption {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 400;
+  }
+}
+
+// ========================================
+// DARK MODE
+// ========================================
+.dark-mode {
+  // Rails
+  .rail {
+    background: rgba(155, 126, 196, 0.2) !important;
+
+    &.rail--progress {
+      background: var(--dark-accent) !important;
+      box-shadow: 0 0 12px rgba(155, 126, 196, 0.4);
+    }
+  }
+
+  // Dots base
+  .step .dot {
+    background: var(--dark-bg-secondary) !important;
+    border-color: rgba(155, 126, 196, 0.35) !important;
+
+    .inner {
+      background: rgba(155, 126, 196, 0.25) !important;
+    }
+
+    .check {
+      color: #ffffff !important;
+    }
+  }
+
+  // Step done
+  .step.step--done .dot {
+    border-color: var(--dark-accent) !important;
+    background: var(--dark-accent) !important;
+    box-shadow: 0 0 20px rgba(155, 126, 196, 0.5), 0 0 0 8px rgba(155, 126, 196, 0.12);
+  }
+
+  // Step current
+  .step.step--current .dot {
+    border-color: var(--dark-accent) !important;
+    background: var(--dark-accent) !important;
+    box-shadow: 0 0 24px rgba(155, 126, 196, 0.7),
+                0 0 0 8px rgba(155, 126, 196, 0.18),
+                0 0 0 16px rgba(155, 126, 196, 0.1) !important;
+    animation: pulse-glow 2s ease-in-out infinite;
+
+    .inner {
+      background: #ffffff !important;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+  }
+
+  // Step disabled
+  .step.step--disabled .dot {
+    border-color: rgba(155, 126, 196, 0.25) !important;
+    background: var(--dark-bg-secondary) !important;
+
+    .inner {
+      background: rgba(155, 126, 196, 0.18) !important;
+    }
+  }
+
+  // Captions
+  .step .caption {
+    color: var(--dark-text-primary) !important;
+  }
+
+  .step.step--done .caption {
+    color: var(--dark-text-primary) !important;
+  }
+
+  .step.step--current .caption {
+    color: var(--dark-text-primary) !important;
+    text-shadow: 0 0 10px rgba(155, 126, 196, 0.3);
+  }
+
+  .step.step--disabled .caption {
+    color: var(--dark-text-muted) !important;
+  }
+
+  // Title box
+  .step-title-box {
+    background: var(--dark-bg-tertiary) !important;
+    border: 1px solid rgba(155, 126, 196, 0.25);
+
+    .step-title {
+      color: var(--dark-text-primary) !important;
+    }
+
+    &.bg-secundario {
+      background: var(--dark-bg-tertiary) !important;
+    }
+  }
+
+  // Progress bar
+  .stepper-progress-bar {
+    .progress-track {
+      background: rgba(155, 126, 196, 0.2) !important;
+    }
+
+    .progress-fill {
+      background: var(--dark-accent) !important;
+    }
+
+    .progress-text {
+      color: var(--dark-text-muted) !important;
+    }
+  }
+}
+
+// Animación de pulso para el paso actual
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 24px rgba(155, 126, 196, 0.7),
+                0 0 0 8px rgba(155, 126, 196, 0.18),
+                0 0 0 16px rgba(155, 126, 196, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(155, 126, 196, 0.9),
+                0 0 0 8px rgba(155, 126, 196, 0.25),
+                0 0 0 16px rgba(155, 126, 196, 0.15);
+  }
+}

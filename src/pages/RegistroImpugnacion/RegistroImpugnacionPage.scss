@@ -1,0 +1,716 @@
+/**
+ * Estilos de RegistroImpugnacionPage (Wizard)
+ * Migrado de Angular: impugnacion-wizard.component.scss
+ */
+
+$purple-primary: #582E73;
+$magenta-primary: #C42C7A;
+
+.wizard-container {
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+  background-color: #f5f5f5;
+}
+
+.wizard-content {
+  max-width: 1318px;
+  margin: 0 auto;
+  margin-bottom: 6rem;
+  padding: 3rem 2.5rem;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+
+  h4 {
+    font: normal normal bold 38px/44px Roboto;
+    letter-spacing: 0px;
+    color: #000000;
+    text-align: left;
+    margin-bottom: 1.5rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0;
+  }
+}
+
+.space-my-0500 {
+  margin: 1.25rem 0;
+}
+
+.space-my-0400 {
+  margin: 1rem 0;
+}
+
+.expediente-info {
+  font-size: 0.95rem;
+  color: #582E73;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #f0e6f5;
+  border-radius: 6px;
+
+  strong {
+    color: #3D1F50;
+  }
+}
+
+.step-container {
+  margin-top: 2rem;
+  min-height: 400px;
+}
+
+.step-content {
+  h5 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 1rem;
+  }
+
+  .step-description {
+    font-size: 0.95rem;
+    color: #666666;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Step Card (igual que Angular)
+.step-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem 0;
+}
+
+.step-main-label {
+  font-size: 1.1rem;
+  color: #000;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+// Radio Group (igual que Angular)
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.radio-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.5rem;
+  background: #EFEFEF;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $magenta-primary;
+    box-shadow: 0 2px 8px rgba(196, 44, 122, 0.15);
+  }
+
+  &:focus {
+    outline: 3px solid $magenta-primary;
+    outline-offset: 2px;
+  }
+
+  &.selected {
+    border-color: $magenta-primary;
+    background: #FAE8F3;
+  }
+
+  label {
+    cursor: pointer;
+    margin: 0;
+  }
+}
+
+.radio-custom {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid $magenta-primary;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+
+  &:checked {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      background: $magenta-primary;
+      border-radius: 50%;
+    }
+  }
+}
+
+.radio-label {
+  font-size: 1rem;
+  color: #000;
+  font-weight: 500;
+}
+
+// Form Collapse (igual que Angular step1)
+.form-collapse {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0;
+
+  &.open {
+    max-height: 1000px;
+    padding-top: 1.5rem;
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+  }
+}
+
+// Tooltip personalizado
+.tooltip-icon-custom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: $purple-primary;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: help;
+  position: relative;
+
+  .tooltip-text {
+    visibility: hidden;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: normal;
+    white-space: nowrap;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+  }
+
+  &:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+// Square buttons para agregar/quitar representantes
+.square-btn {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.square-btn-spacer {
+  width: 38px;
+  flex-shrink: 0;
+}
+
+// Stepper separator
+.stepper-separator {
+  margin: 2rem 0 1.5rem;
+  border: 0;
+  border-top: 1px solid #DEE2E6;
+}
+
+// Button retroceder
+.btn-retroceder {
+  background: transparent;
+  border: 2px solid $purple-primary;
+  color: $purple-primary;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $purple-primary;
+    color: #fff;
+  }
+}
+
+// Autoridades agregadas
+.autoridades-agregadas {
+  h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $purple-primary;
+    margin-bottom: 1rem;
+  }
+
+  .autoridad-item {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+
+    strong {
+      color: $purple-primary;
+    }
+  }
+}
+
+// Form styles
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.form-group {
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #582E73;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #CED4DA;
+    border-radius: 6px;
+    background: #FFFFFF;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #C42C7A;
+      box-shadow: 0 0 0 3px rgba(196, 44, 122, 0.15);
+    }
+
+    &::placeholder {
+      color: #ADB5BD;
+    }
+  }
+
+  select.form-control {
+    cursor: pointer;
+  }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+  }
+}
+
+// Upload area
+.upload-area {
+  margin-top: 1.5rem;
+}
+
+.upload-box {
+  border: 2px dashed #C42C7A;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #FAFAFA;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #FAE8F3;
+    border-color: #A02465;
+  }
+
+  .upload-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #333333;
+    margin-bottom: 0.5rem;
+  }
+
+  .upload-hint {
+    display: block;
+    font-size: 0.85rem;
+    color: #6C757D;
+    margin-bottom: 1rem;
+  }
+
+  .btn-upload {
+    padding: 0.75rem 2rem;
+    background: #C42C7A;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #A02465;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.uploaded-files {
+  margin-top: 1.5rem;
+
+  .files-hint {
+    text-align: center;
+    color: #6C757D;
+    font-style: italic;
+  }
+}
+
+// Action buttons
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #DEE2E6;
+}
+
+// Mobile styles
+@media (max-width: 768px) {
+  .wizard-container {
+    padding: 1rem 0;
+  }
+
+  .wizard-content {
+    padding: 1.5rem 1rem;
+    margin-bottom: 3rem;
+
+    h4 {
+      font-size: 1.5rem;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .step-container {
+    min-height: auto;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .step-actores {
+    .radio-card {
+      padding: 1rem;
+    }
+
+    .radio-content {
+      h6 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .upload-box {
+    padding: 2rem 1rem;
+
+    .upload-icon {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 1rem;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Dark mode
+.dark-mode {
+  .wizard-container {
+    background-color: var(--dark-bg-primary) !important;
+  }
+
+  .wizard-content {
+    background-color: var(--dark-bg-secondary) !important;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6);
+
+    h4 {
+      color: var(--dark-text-primary) !important;
+    }
+
+    h5 {
+      color: var(--dark-text-primary) !important;
+    }
+
+    h6 {
+      color: var(--dark-text-secondary) !important;
+    }
+  }
+
+  .expediente-info {
+    background-color: var(--dark-bg-tertiary) !important;
+    color: var(--dark-accent) !important;
+
+    strong {
+      color: var(--dark-text-primary) !important;
+    }
+  }
+
+  // Step card dark mode
+  .step-card {
+    background: transparent !important;
+
+    h5 {
+      color: var(--dark-text-primary) !important;
+    }
+
+    .step-description {
+      color: var(--dark-text-secondary) !important;
+    }
+  }
+
+  // Labels y textos
+  .dato-obligatorio {
+    color: var(--dark-text-secondary) !important;
+  }
+
+  .step-main-label {
+    color: var(--dark-text-primary) !important;
+  }
+
+  .form-label {
+    color: var(--dark-text-secondary) !important;
+  }
+
+  // Radio cards dark mode
+  .radio-group {
+    .radio-card {
+      background: var(--dark-bg-tertiary) !important;
+      border-color: var(--dark-border) !important;
+
+      &:hover {
+        border-color: var(--dark-accent) !important;
+        box-shadow: 0 4px 12px rgba(155, 126, 196, 0.25) !important;
+      }
+
+      &.selected {
+        border-color: var(--dark-accent) !important;
+        background: rgba(155, 126, 196, 0.15) !important;
+      }
+    }
+  }
+
+  .radio-custom {
+    border-color: var(--dark-accent) !important;
+    background: var(--dark-bg-tertiary) !important;
+
+    &:checked::after {
+      background: var(--dark-accent) !important;
+    }
+  }
+
+  .radio-label {
+    color: var(--dark-text-primary) !important;
+  }
+
+  // Tooltip dark mode
+  .tooltip-icon-custom {
+    background: var(--dark-accent) !important;
+  }
+
+  // Form collapse dark mode
+  .form-collapse {
+    &.open {
+      border-top-color: var(--dark-border) !important;
+    }
+  }
+
+  // Form controls dark mode
+  .form-control {
+    background-color: var(--dark-bg-tertiary) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+
+    &:focus {
+      border-color: var(--dark-accent) !important;
+      box-shadow: 0 0 0 3px rgba(155, 126, 196, 0.15) !important;
+    }
+
+    &::placeholder {
+      color: var(--dark-text-muted) !important;
+    }
+  }
+
+  .form-select {
+    background-color: var(--dark-bg-tertiary) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+
+    option {
+      background-color: var(--dark-bg-secondary) !important;
+      color: var(--dark-text-primary) !important;
+    }
+  }
+
+  // Invalid feedback
+  .invalid-feedback {
+    color: #ff6b6b !important;
+  }
+
+  // Square buttons dark mode
+  .square-btn {
+    background: var(--dark-bg-tertiary) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+
+    &:hover {
+      background: var(--dark-accent) !important;
+      border-color: var(--dark-accent) !important;
+      color: #fff !important;
+    }
+  }
+
+  // Stepper separator dark mode
+  .stepper-separator {
+    border-top-color: var(--dark-border) !important;
+  }
+
+  // Button retroceder dark mode
+  .btn-retroceder {
+    border-color: var(--dark-accent) !important;
+    color: var(--dark-accent) !important;
+
+    &:hover {
+      background: var(--dark-accent) !important;
+      color: #fff !important;
+    }
+  }
+
+  // Autoridades agregadas dark mode
+  .autoridades-agregadas {
+    h6 {
+      color: var(--dark-accent) !important;
+    }
+
+    .autoridad-item {
+      background: var(--dark-bg-tertiary) !important;
+      border-color: var(--dark-border) !important;
+
+      strong {
+        color: var(--dark-accent) !important;
+      }
+    }
+
+    .btn-link.text-danger {
+      color: #ff6b6b !important;
+    }
+  }
+
+  // Card component dark mode
+  .card {
+    background: var(--dark-bg-tertiary) !important;
+    border-color: var(--dark-border) !important;
+  }
+
+  // Text muted
+  .text-muted {
+    color: var(--dark-text-muted) !important;
+  }
+
+  // Upload area dark mode
+  .upload-area {
+    p {
+      color: var(--dark-text-primary) !important;
+
+      strong {
+        color: var(--dark-text-primary) !important;
+      }
+    }
+  }
+
+  .upload-box {
+    border-color: var(--dark-accent) !important;
+    background: var(--dark-bg-tertiary) !important;
+
+    &:hover {
+      background: rgba(155, 126, 196, 0.1) !important;
+    }
+
+    p {
+      color: var(--dark-text-primary) !important;
+    }
+
+    .upload-hint {
+      color: var(--dark-text-secondary) !important;
+    }
+
+    .btn-upload {
+      background: var(--dark-accent) !important;
+
+      &:hover {
+        background: #7d63a0 !important;
+      }
+    }
+  }
+
+  .uploaded-files {
+    .files-hint {
+      color: var(--dark-text-muted) !important;
+    }
+  }
+
+  // Action buttons dark mode
+  .action-buttons {
+    border-top-color: var(--dark-border) !important;
+  }
+}

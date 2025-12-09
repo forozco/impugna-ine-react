@@ -1,0 +1,536 @@
+/**
+ * Estilos de la pagina de Login - INE Design System
+ */
+
+.login-container {
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.login-logo {
+  margin-bottom: 2.5rem;
+
+  .impugna-logo {
+    max-width: 350px;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.login-box {
+  max-width: 428px;
+  width: 100%;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 8px #00000029;
+  border-radius: 10px;
+  padding: 16px 25px 24px 25px;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #575453;
+  appearance: none;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  border: 1px solid #C0C0C0;
+
+  &::placeholder {
+    color: #575453;
+  }
+
+  &:active:not(:disabled) {
+    border: 1px solid #D5007F !important;
+  }
+
+  &:hover:not(:disabled) {
+    border: 1px solid #333333;
+  }
+
+  &:focus:not(:disabled) {
+    outline: 2px solid #409AA1;
+    box-shadow: none !important;
+  }
+
+  &:disabled {
+    background-color: #EBEBEB;
+    border: 1px solid #EBEBEB;
+    color: #575453;
+  }
+
+  &.error {
+    border: 1px solid #AA1700;
+  }
+}
+
+.dato-obligatorio {
+  color: #666666;
+
+  .text-danger {
+    color: #DC3545 !important;
+  }
+}
+
+.text-danger {
+  color: #DC3545 !important;
+}
+
+.error-message {
+  display: block;
+  color: #DC3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 400;
+}
+
+.field-separator {
+  height: 1.5rem;
+}
+
+/* Input con icono */
+.input-icon-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .form-control {
+    flex: 1;
+    padding-right: 3rem;
+  }
+
+  .btn-toggle-visibility {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: #6C757D;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      color: #495057;
+    }
+  }
+}
+
+.otp-message {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  animation: fadeInScale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  .success-animation {
+    margin-bottom: 1.5rem;
+  }
+
+  .checkmark-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #10B981;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleInBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .checkmark {
+    width: 20px;
+    height: 40px;
+    border: solid #FFFFFF !important;
+    border-width: 0 5px 5px 0 !important;
+    transform: rotate(45deg);
+    animation: checkmarkDraw 0.4s cubic-bezier(0.65, 0, 0.35, 1) 0.4s both;
+  }
+
+  .otp-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #047857;
+    margin: 1rem 0 1rem 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+  }
+
+  .otp-text {
+    font-size: 1rem;
+    color: #333333;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s both;
+  }
+
+  .otp-subtext {
+    font-size: 0.95rem;
+    color: #666666;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+
+    .otp-icon {
+      font-size: 1.2rem;
+      color: #10B981;
+      animation: iconBounce 0.6s ease-in-out 0.8s both;
+    }
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleInBounce {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkmarkDraw {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  50% {
+    height: 40px;
+    opacity: 1;
+  }
+  100% {
+    height: 40px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes iconBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+// Loader inline
+.loader-inline {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.75rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+.spinner {
+  display: inline-block !important;
+  width: 18px !important;
+  height: 18px !important;
+  border: 2.5px solid rgba(255, 255, 255, 0.3) !important;
+  border-top-color: #FFFFFF !important;
+  border-radius: 50% !important;
+  animation: spin 0.7s linear infinite !important;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.password-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  label {
+    margin-bottom: 0;
+  }
+}
+
+.forgot-link {
+  font-size: 12px;
+  text-decoration: underline;
+  color: #582E73;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    color: #6B3583;
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: #4A2260;
+  }
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 1rem 0.75rem;
+    padding-top: 1.5rem;
+    min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    .login-container {
+      padding: 1.5rem 0.75rem;
+      padding-top: 3rem;
+      justify-content: flex-start;
+    }
+
+    .login-logo {
+      margin-bottom: 2rem !important;
+    }
+  }
+
+  .login-logo {
+    margin-bottom: 1.5rem;
+
+    .impugna-logo {
+      max-width: 280px;
+      width: 100%;
+    }
+  }
+
+  .login-box {
+    padding: 1.75rem 1.25rem;
+    margin: 0 0.5rem;
+    max-width: 100%;
+    width: calc(100% - 1rem);
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+    h6 {
+      font-size: 1.15rem;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+      line-height: 1.4;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  label {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: block;
+
+    i {
+      font-size: 0.9rem;
+    }
+  }
+
+  .form-control {
+    font-size: 0.9rem;
+    padding: 0.625rem 0.75rem;
+    min-height: 44px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    &::placeholder {
+      font-size: 0.875rem;
+    }
+  }
+
+  .password-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    label {
+      flex: 1 1 auto;
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Dark mode styles
+.dark-mode {
+  .login-container {
+    background-color: var(--dark-bg-primary) !important;
+  }
+
+  .login-box {
+    background: var(--dark-bg-secondary) !important;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid var(--dark-border);
+
+    h6 {
+      color: var(--dark-text-primary) !important;
+    }
+
+    p {
+      color: var(--dark-text-primary) !important;
+    }
+
+    label {
+      color: var(--dark-text-primary) !important;
+
+      i {
+        color: var(--dark-text-primary) !important;
+      }
+    }
+  }
+
+  .dato-obligatorio {
+    color: var(--dark-text-primary) !important;
+
+    .text-danger {
+      color: #ff6b6b !important;
+    }
+  }
+
+  .text-danger {
+    color: #ff6b6b !important;
+  }
+
+  label {
+    .text-danger {
+      color: #ff6b6b !important;
+    }
+  }
+
+  .error-message {
+    color: #ff6b6b !important;
+  }
+
+  .form-control {
+    background-color: var(--dark-bg-tertiary) !important;
+    color: var(--dark-text-primary) !important;
+    border-color: var(--dark-border) !important;
+
+    &::placeholder {
+      color: var(--dark-text-muted) !important;
+    }
+
+    &:active:not(:disabled) {
+      border-color: var(--dark-accent) !important;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: var(--dark-accent) !important;
+    }
+
+    &:focus:not(:disabled) {
+      outline-color: var(--dark-accent) !important;
+      border-color: var(--dark-accent) !important;
+    }
+
+    &:disabled {
+      background-color: var(--dark-bg-quaternary) !important;
+      border-color: var(--dark-border) !important;
+      color: var(--dark-text-muted) !important;
+    }
+
+    &.error {
+      border-color: #ff6b6b !important;
+    }
+  }
+
+  .forgot-link {
+    color: var(--dark-accent) !important;
+
+    &:hover {
+      color: var(--dark-accent-hover) !important;
+    }
+
+    &:active {
+      color: var(--dark-accent) !important;
+      opacity: 0.8;
+    }
+  }
+
+  .otp-message {
+    .checkmark-circle {
+      background: #8B5CB8;
+    }
+
+    .checkmark {
+      border: solid #FFFFFF !important;
+      border-width: 0 5px 5px 0 !important;
+    }
+
+    .otp-title {
+      color: #A78BCD !important;
+    }
+
+    .otp-text {
+      color: var(--dark-text-primary) !important;
+    }
+
+    .otp-subtext {
+      color: var(--dark-text-muted) !important;
+
+      .otp-icon {
+        color: #A78BCD !important;
+      }
+    }
+  }
+
+  .input-icon-group {
+    .btn-toggle-visibility {
+      color: var(--dark-text-secondary) !important;
+
+      &:hover {
+        color: var(--dark-accent) !important;
+      }
+    }
+  }
+
+  .spinner {
+    border-color: rgba(167, 139, 205, 0.3) !important;
+    border-top-color: #A78BCD !important;
+  }
+}
