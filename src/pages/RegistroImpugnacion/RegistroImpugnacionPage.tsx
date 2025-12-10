@@ -45,30 +45,31 @@ const DEMANDA_UPLOADER_CONFIG: FileUploaderConfig = {
   tooltip: 'Sube la demanda de la impugnación en un solo archivo PDF'
 };
 
-const EVIDENCIA_UPLOADER_CONFIG: FileUploaderConfig = {
-  acceptedFileTypes: ['.jpg', '.jpeg', '.png', '.bmp', '.pdf', '.mp4', '.mov', '.avi', '.mp3', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.zip', '.txt'],
-  acceptedMimeTypes: [
-    'image/jpeg', 'image/png', 'image/bmp',
-    'application/pdf',
-    'video/mp4', 'video/quicktime', 'video/x-msvideo',
-    'audio/mpeg',
-    'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/zip', 'application/x-zip-compressed',
-    'text/plain'
-  ],
-  maxFileSizeMB: 1024, // 1GB
-  maxFiles: 50,
-  maxFileNameLength: 240,
-  allowMultiple: true,
-  allowZip: true,
-  required: false,
-  validateMagicNumber: true,
-  title: 'Pruebas y anexos',
-  subtitle: 'JPG, PNG, BMP, PDF, MP4, MOV, AVI, MP3, DOC, DOCX, XLS, XLSX, PPT, PPTX, ZIP, TXT (máx 1GB por archivo)',
-  tooltip: 'Adjunta las pruebas y documentos que soporten tu impugnación'
-};
+// TODO: Implementar cuando se use el FileUploader en step 5
+// const EVIDENCIA_UPLOADER_CONFIG: FileUploaderConfig = {
+//   acceptedFileTypes: ['.jpg', '.jpeg', '.png', '.bmp', '.pdf', '.mp4', '.mov', '.avi', '.mp3', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.zip', '.txt'],
+//   acceptedMimeTypes: [
+//     'image/jpeg', 'image/png', 'image/bmp',
+//     'application/pdf',
+//     'video/mp4', 'video/quicktime', 'video/x-msvideo',
+//     'audio/mpeg',
+//     'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+//     'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//     'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+//     'application/zip', 'application/x-zip-compressed',
+//     'text/plain'
+//   ],
+//   maxFileSizeMB: 1024, // 1GB
+//   maxFiles: 50,
+//   maxFileNameLength: 240,
+//   allowMultiple: true,
+//   allowZip: true,
+//   required: false,
+//   validateMagicNumber: true,
+//   title: 'Pruebas y anexos',
+//   subtitle: 'JPG, PNG, BMP, PDF, MP4, MOV, AVI, MP3, DOC, DOCX, XLS, XLSX, PPT, PPTX, ZIP, TXT (máx 1GB por archivo)',
+//   tooltip: 'Adjunta las pruebas y documentos que soporten tu impugnación'
+// };
 
 // Step configurations (igual que Angular)
 const STEP_CONFIGS = [
@@ -155,12 +156,12 @@ const RegistroImpugnacionPage = () => {
   });
 
   // File upload states for each step (storing actual File objects)
-  const [personalidadFiles, setPersonalidadFiles] = useState<File[]>([]);
-  const [demandaFiles, setDemandaFiles] = useState<File[]>([]);
-  const [evidenciaFiles, setEvidenciaFiles] = useState<File[]>([]);
+  // Los setters se usan en los callbacks de FileUploader
+  const [, setPersonalidadFiles] = useState<File[]>([]);
+  const [, setDemandaFiles] = useState<File[]>([]);
 
   // Validation states for uploaders
-  const [isDemandaValid, setIsDemandaValid] = useState(false);
+  const [, setIsDemandaValid] = useState(false);
 
   // Get wizard title based on tipo (igual que Angular formService.wizardTitle())
   const getWizardTitle = () => {
@@ -323,7 +324,7 @@ const RegistroImpugnacionPage = () => {
   // Only letters filter (igual que Angular)
   const onlyLetters = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const char = e.key;
-    const allowedPattern = /^[a-zA-ZáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙäëïöüÄËÏÖÜâêîôûÂÊÎÔÛãõÃÕçÇñÑ\s'\-]$/;
+    const allowedPattern = /^[a-zA-ZáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙäëïöüÄËÏÖÜâêîôûÂÊÎÔÛãõÃÕçÇñÑ\s'-]$/;
     if (char.length === 1 && !allowedPattern.test(char)) {
       e.preventDefault();
     }

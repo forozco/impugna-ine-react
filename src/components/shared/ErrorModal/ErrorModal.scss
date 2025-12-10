@@ -1,0 +1,310 @@
+/**
+ * Estilos de ErrorModal
+ * Copiado directamente de Angular: confirm-exit-modal.component.scss
+ */
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+}
+
+.modal-container {
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  max-width: 580px;
+  width: 90%;
+}
+
+.modal-content {
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 8px 12px #0000003D;
+  border-radius: 16px;
+  opacity: 1;
+  padding: 3rem 2.5rem 3rem;
+  position: relative;
+  text-align: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #000;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #C42C7A;
+    outline-offset: 2px;
+    opacity: 1;
+  }
+}
+
+.modal-icon {
+  margin: 0 auto 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  i {
+    font-size: 4rem;
+    color: #C42C7A;
+  }
+}
+
+.modal-title {
+  font: normal normal bold 28px/37px Roboto;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.modal-message {
+  font: normal normal normal 16px/21px Roboto;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  padding: 0.75rem 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancelar {
+  background-color: #F0EBF2;
+  color: #5B2A73;
+
+  &:hover {
+    background-color: #E0D5E6;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #5B2A73;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(91, 42, 115, 0.2);
+  }
+}
+
+.btn-aceptar {
+  background-color: #C42C7A;
+  color: white;
+
+  &:hover {
+    background-color: #A82465;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #5B2A73;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(196, 44, 122, 0.3);
+  }
+}
+
+// Responsive Mobile
+@media (max-width: 768px) {
+  .modal-container {
+    top: 50%;
+    width: 95%;
+    max-width: 95%;
+    padding: 0 0.5rem;
+  }
+
+  .modal-content {
+    padding: 2rem 1.25rem 2rem;
+    border-radius: 12px;
+  }
+
+  .close-button {
+    top: 0.875rem;
+    right: 0.875rem;
+    padding: 0.375rem;
+
+    svg {
+      width: 24px;
+      height: 24px;
+
+      path {
+        stroke-width: 2.5;
+      }
+    }
+  }
+
+  .modal-icon {
+    margin-bottom: 1.5rem;
+
+    i {
+      font-size: 3rem;
+    }
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding: 0 0.5rem;
+
+    br {
+      display: none;
+    }
+  }
+
+  .modal-message {
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    margin-bottom: 2rem;
+    padding: 0 0.25rem;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 0.875rem;
+    width: 100%;
+
+    .btn {
+      width: 100%;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+      min-height: 44px;
+    }
+  }
+
+  // Orden inverso de botones en mobile (Aceptar arriba, Cancelar abajo)
+  // para facilitar acceso con el pulgar
+  .btn-aceptar {
+    order: 1;
+  }
+
+  .btn-cancelar {
+    order: 2;
+  }
+}
+
+// Responsive para pantallas muy pequeñas
+@media (max-width: 375px) {
+  .modal-content {
+    padding: 1.75rem 1rem 1.75rem;
+  }
+
+  .modal-title {
+    font-size: 1.15rem;
+    line-height: 1.4rem;
+  }
+
+  .modal-message {
+    font-size: 0.875rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .modal-icon {
+    margin-bottom: 1.25rem;
+
+    i {
+      font-size: 2.5rem;
+    }
+  }
+}
+
+// Dark mode styles
+.dark-mode {
+  .modal-backdrop {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .modal-content {
+    background: var(--dark-bg-secondary) !important;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(155, 126, 196, 0.25);
+  }
+
+  .close-button {
+    color: #ffffff !important;
+    opacity: 0.9;
+
+    &:hover {
+      opacity: 1;
+      color: var(--dark-accent) !important;
+    }
+
+    &:focus-visible {
+      outline-color: var(--dark-accent) !important;
+    }
+  }
+
+  .modal-icon {
+    i {
+      color: var(--dark-accent) !important;
+    }
+  }
+
+  .modal-title {
+    color: var(--dark-text-primary) !important;
+  }
+
+  .modal-message {
+    color: var(--dark-text-secondary) !important;
+  }
+
+  .btn-cancelar {
+    background-color: var(--dark-bg-tertiary) !important;
+    color: var(--dark-text-primary) !important;
+
+    &:hover {
+      background-color: var(--dark-hover) !important;
+    }
+
+    &:focus-visible {
+      outline-color: var(--dark-accent) !important;
+      box-shadow: 0 0 0 4px rgba(155, 126, 196, 0.2) !important;
+    }
+  }
+
+  .btn-aceptar {
+    background-color: var(--dark-accent) !important;
+    color: #ffffff !important;
+
+    &:hover {
+      background-color: var(--dark-accent-hover) !important;
+    }
+
+    &:focus-visible {
+      outline-color: #ffffff !important;
+      box-shadow: 0 0 0 4px rgba(155, 126, 196, 0.3) !important;
+    }
+  }
+}

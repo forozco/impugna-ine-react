@@ -5,12 +5,13 @@
  */
 
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRegistroUsuarioStore } from '../../stores/registroUsuarioStore';
 import FileUploader from '../../components/shared/FileUploader/FileUploader';
 import type { FileUploaderConfig } from '../../components/shared/FileUploader/FileUploader';
 import { consultarCodigoPostal, type SepomexColonia } from '../../services/sepomexService';
 import { usuariosService, type RegistroUsuarioRequest } from '../../services/api';
+import ErrorModal from '../../components/shared/ErrorModal/ErrorModal';
 import './RegistroNuevoUsuarioPage.scss';
 
 // Interfaces
@@ -73,8 +74,7 @@ const LETTERS_REGEX = /^[a-zA-ZáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙäëïö�
 
 const RegistroNuevoUsuarioPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { setFormData: setStoreFormData, updateFormData: updateStoreFormData, reset: resetStore, formData: storedData } = useRegistroUsuarioStore();
+  const { setFormData: setStoreFormData, updateFormData: updateStoreFormData, formData: storedData } = useRegistroUsuarioStore();
 
   // Form data state
   const [formData, setFormData] = useState<FormData>({
@@ -134,6 +134,11 @@ const RegistroNuevoUsuarioPage = () => {
   // Files state
   const [archivos, setArchivos] = useState<File[]>([]);
 
+  // Modal de error state
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorModalMessage, setErrorModalMessage] = useState('');
+  const [errorModalTitle, setErrorModalTitle] = useState('Error');
+
   // Debounce ref for CP
   const cpDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -174,16 +179,8 @@ const RegistroNuevoUsuarioPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData, archivos]);
 
-  // Clean up store when navigating away (except to revisar-data or registro-exitoso)
-  useEffect(() => {
-    return () => {
-      const path = location.pathname;
-      if (!path.includes('/revisar-data') && !path.includes('/registro-exitoso-usuario')) {
-        console.log('[REGISTRO] Saliendo de registro-nuevo-usuario, limpiando store');
-        resetStore();
-      }
-    };
-  }, [location.pathname, resetStore]);
+  // NO limpiar el store automáticamente - se limpiará solo después de envío exitoso
+  // Esto permite preservar los datos al navegar a /revisar-data y volver
 
   // SEPOMEX lookup on codigoPostal change
   useEffect(() => {
@@ -553,11 +550,22 @@ const RegistroNuevoUsuarioPage = () => {
         navigate('/registro-exitoso-usuario');
       } else {
         console.error('[ERROR] Error en el registro:', response.message);
-        // TODO: Mostrar mensaje de error al usuario
+
+        // Mostrar modal de error según el tipo de error
+        if (response.error === 'EMAIL_EXISTS') {
+          setErrorModalTitle('Correo ya registrado');
+          setErrorModalMessage('El correo electrónico que ingresaste ya está registrado en el sistema. Por favor, utiliza otro correo o inicia sesión con tu cuenta existente.');
+        } else {
+          setErrorModalTitle('Error en el registro');
+          setErrorModalMessage(response.message || 'Ocurrió un error al procesar tu registro. Por favor, intenta de nuevo.');
+        }
+        setShowErrorModal(true);
       }
     } catch (error) {
       console.error('[ERROR] Error al registrar usuario:', error);
-      // TODO: Mostrar mensaje de error al usuario
+      setErrorModalTitle('Error de conexión');
+      setErrorModalMessage('No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet e intenta de nuevo.');
+      setShowErrorModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -1128,6 +1136,15 @@ const RegistroNuevoUsuarioPage = () => {
         </div>
 
       </div>
+
+      {/* Modal de error */}
+      <ErrorModal
+        isOpen={showErrorModal}
+        title={errorModalTitle}
+        message={errorModalMessage}
+        onClose={() => setShowErrorModal(false)}
+        buttonText="Aceptar"
+      />
     </section>
   );
 };
